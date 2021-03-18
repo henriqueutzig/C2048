@@ -1,3 +1,5 @@
 *.d
 C2048
 C2048.exe
+
+.vscode
