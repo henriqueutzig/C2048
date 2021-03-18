@@ -5,7 +5,7 @@
 # Compiler settings - Can be customized.
 CC = gcc
 CXXFLAGS = -std=c11 -Wall
-LDFLAGS = -lraylib -lGL  -lm -pthread -ldl -lX11 # -lopenal -lglfw 
+LDFLAGS = -lraylib -lGL  -lm -pthread -ldl -lX11  #-lopenal -lglfw 
 
 # Makefile settings - Can be customized.
 APPNAME = C2048
