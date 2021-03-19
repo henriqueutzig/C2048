@@ -6,7 +6,6 @@
 
 # Libraries
 *.lib
-**/*.a
 
 # Executables
 *.exe
