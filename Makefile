@@ -7,6 +7,12 @@ CC = gcc
 CXXFLAGS = -std=c11 -Wall
 LIBFOLDER = -L $(SRCDIR)/libs/
 
+BUILD_MODE ?= RELEASE
+
+ifeq ($(BUILD_MODE),DEBUG)
+    CXXFLAGS += -g
+endif
+
 ifeq ($(OS),Windows_NT)
 	LDFLAGS = -lraylib -lopengl32 -lgdi32 -lwinmm  
 else
