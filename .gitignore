@@ -1,4 +1,16 @@
+# Prerequisites
 *.d
-C2048
-C2048.exe
-obj/*.o
+# Object files
+*.o
+*.obj
+
+# Libraries
+*.lib
+**/*.a
+
+# Executables
+*.exe
+*.out
+*.app
+
+.vscode

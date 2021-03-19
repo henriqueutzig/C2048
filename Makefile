@@ -5,7 +5,16 @@
 # Compiler settings - Can be customized.
 CC = gcc
 CXXFLAGS = -std=c11 -Wall
-LDFLAGS = -lraylib -lGL  -lm -pthread -ldl -lX11  #-lopenal -lglfw 
+LIBFOLDER = -L $(SRCDIR)/libs/
+
+ifeq ($(OS),Windows_NT)
+	LDFLAGS = -lraylib -lopengl32 -lgdi32 -lwinmm  
+else
+	UNAME_S := $(shell uname -s)
+    ifeq ($(UNAME_S),Linux)
+        LDFLAGS = -lraylib -lGL  -lm -pthread -ldl -lX11 
+    endif
+endif
 
 # Makefile settings - Can be customized.
 APPNAME = C2048
@@ -33,7 +42,7 @@ all: $(APPNAME)
 
 # Builds the app
 $(APPNAME): $(OBJ)
-	$(CC) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
+	$(CC) $(CXXFLAGS) -o $@ $^ $(LIBFOLDER) $(LDFLAGS)
 
 # Creates the dependecy rules
 %.d: $(SRCDIR)/%$(EXT)
