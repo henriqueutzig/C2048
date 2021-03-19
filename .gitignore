@@ -12,5 +12,6 @@
 *.exe
 *.out
 *.app
+C2048
 
 .vscode
