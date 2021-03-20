@@ -3,7 +3,7 @@
 int main(void)
 {
     // Window initialization 
-    Window window = { 800, 450, mainMenu, "C2048", true};
+    Window window = { DEFAULT_W, DEFAULT_H, mainMenu, "C2048", true};
     InitWindow(window.width, window.height, window.name);
     
 
