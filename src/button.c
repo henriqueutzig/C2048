@@ -1,7 +1,7 @@
 #include "includes/button.h"
 #include "includes/raylib.h"
 
-Button initButton(Texture texture, int numFrames, Sound sound, Window window)
+Button initButton(Texture texture, int numFrames, Sound sound, Vector2 position)
 {
     Button button;
 
@@ -10,7 +10,7 @@ Button initButton(Texture texture, int numFrames, Sound sound, Window window)
     button.clickSound = sound;
     button.frameHeight = button.texture.height / numFrames;
     button.position = (Rectangle){0, 0, texture.width, button.frameHeight};
-    button.bounds = (Rectangle){window.width / 2 - texture.width / 2, window.height / 2 - texture.height / numFrames / 2, texture.width, button.frameHeight};
+    button.bounds = (Rectangle){position.x, position.y, texture.width, button.frameHeight};
     button.state = NORMAL;
     button.action = false;
 

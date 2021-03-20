@@ -6,7 +6,7 @@ int main(void)
     Window window = {800, 450, mainMenu, "C2048", true};
     InitWindow(window.width, window.height, window.name);
     InitAudioDevice();
-    Button button = initButton(LoadTexture("src/resources/textures/button.png"), 3, LoadSound("src/resources/audio/buttonfx.wav"), window);
+    Button button = initButton(LoadTexture("src/resources/textures/button.png"), 3, LoadSound("src/resources/audio/buttonfx.wav"), (Vector2){100, 100});
 
     SetTargetFPS(60);
     // Main Scene loop
