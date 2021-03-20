@@ -3,7 +3,7 @@ typedef struct Window
     int width;
     int height;
     int screenState;
-    char name[5];
+    char name[6];
     bool darkMode;
 } Window;
 
