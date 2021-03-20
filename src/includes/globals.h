@@ -5,5 +5,4 @@
 #include "raylib.h"
 
 // Our libraries 
-#include "button.h"
 #include "window.h"

@@ -1,5 +1,4 @@
 #include "includes/button.h"
-#include "includes/raylib.h"
 
 Button initButton(Texture texture, int numFrames, Sound sound, Vector2 position)
 {
@@ -48,13 +47,13 @@ bool buttonState(Button *button)
     return false;
 }
 
-void drawButton(Button button)
+void drawButton(Button *button)
 {
-    DrawTextureRec(button.texture, button.position, (Vector2){button.bounds.x, button.bounds.y}, WHITE);
+    DrawTextureRec(button->texture, button->position, (Vector2){button->bounds.x, button->bounds.y}, WHITE);
 }
 
-void deInitButton(Button button)
+void deInitButton(Button *button)
 {
-    UnloadTexture(button.texture);
-    UnloadSound(button.clickSound);
+    UnloadTexture(button->texture);
+    UnloadSound(button->clickSound);
 }
