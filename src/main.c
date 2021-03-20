@@ -6,8 +6,7 @@ int main(void)
     Window window = {800, 450, mainMenu, "C2048", true};
     InitWindow(window.width, window.height, window.name);
     InitAudioDevice();
-
-    Button button = initButton(LoadTexture("resources\\buttons\\button.png"), 3, LoadSound("resources/buttons/buttonfx.wav"), window);
+    Button button = initButton(LoadTexture("src/resources/textures/button.png"), 3, LoadSound("src/resources/audio/buttonfx.wav"), window);
 
     SetTargetFPS(60);
     // Main Scene loop
@@ -23,7 +22,7 @@ int main(void)
         case mainMenu:
             BeginDrawing();
             ClearBackground(RAYWHITE);
-             DrawTextureRec(button.texture, button.position, (Vector2){button.bounds.x, button.bounds.y}, WHITE);
+            drawButton(button);
             EndDrawing();
             break;
         case game:
