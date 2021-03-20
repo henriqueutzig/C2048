@@ -11,13 +11,12 @@ int main(void)
     // Main Scene loop
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
+        BeginDrawing();
         switch (window.screenState)
         {
             case mainMenu:
-                BeginDrawing();
                     ClearBackground(RAYWHITE);
                     DrawText("Test -> WindowController", 190, 200, 20, LIGHTGRAY);
-                EndDrawing();
                 break;
             case game:
                 
@@ -28,6 +27,7 @@ int main(void)
             default:
                 break;
         }
+        EndDrawing();
     }
 
     
