@@ -1,5 +1,5 @@
-#define WINDOW_DW 1280
-#define WINDOW_DH 720
+#define WINDOW_DW 680
+#define WINDOW_DH 480
 
 typedef struct Window
 {

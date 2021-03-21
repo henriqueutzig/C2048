@@ -52,13 +52,10 @@ int main(void)
             EndDrawing();
             break;
         case quit:
-            BeginDrawing();
-
-            ClearBackground(RAYWHITE);
-
-            DrawText("quitWindow", 190, 200, 20, LIGHTGRAY);
-
-            EndDrawing();
+            CloseAudioDevice();
+            deInitMainMenu(&menuScreen);
+            CloseWindow();  
+            return 0;
             break;
         default:
             break;
@@ -67,6 +64,7 @@ int main(void)
 
     // De-init stuff
     CloseAudioDevice();
+    deInitMainMenu(&menuScreen);
     // Close window and OpenGL context
     CloseWindow();
 
