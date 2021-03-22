@@ -1,6 +1,6 @@
 #include "includes/button.h"
 
-Button initButton(Texture texture, int numFrames, Sound sound, Vector2 recSrc)
+Button initButton(Texture texture, int numFrames, Sound sound, Vector2 position)
 {
     Button button;
 
@@ -9,7 +9,7 @@ Button initButton(Texture texture, int numFrames, Sound sound, Vector2 recSrc)
     button.clickSound = sound;
     button.frameHeight = button.texture.height / numFrames;
     button.recSrc = (Rectangle){0, 0, texture.width, button.frameHeight};
-    button.bounds = (Rectangle){recSrc.x, recSrc.y, texture.width, button.frameHeight};
+    button.bounds = (Rectangle){position.x, position.y, texture.width, button.frameHeight};
     button.state = NORMAL;
 
     return button;

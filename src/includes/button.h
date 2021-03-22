@@ -19,7 +19,7 @@ enum ButtonState
     PRESSED
 };
 
-Button initButton(Texture texture, int numFrames, Sound sound, Vector2 recSrc);
+Button initButton(Texture texture, int numFrames, Sound sound, Vector2 position);
 bool buttonState(Button *button);
 void drawButton(Button *button);
 void deInitButton(Button *button);
