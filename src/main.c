@@ -54,7 +54,7 @@ int main(void)
         case quit:
             CloseAudioDevice();
             deInitMainMenu(&menuScreen);
-            CloseWindow();  
+            CloseWindow();
             return 0;
             break;
         default:

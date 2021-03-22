@@ -1,16 +1,12 @@
 #include "raylib.h"
-
-#define BT_TEXTURE "src/resources/textures/button.png"
-#define BT_SOUND "src/resources/audio/buttonfx.wav"
-
+#include "assets.h"
 typedef struct Button
 {
-    bool action;
     int numFrames;
     int frameHeight;
     int state;
     Rectangle bounds;
-    Rectangle position;
+    Rectangle recSrc;
     Vector2 mousePoint;
     Sound clickSound;
     Texture2D texture;

@@ -5,8 +5,9 @@ void drawMainMenu(int *screenState, MainMenu *mainMenu)
 {
     BeginDrawing();
 
-    ClearBackground(RAYWHITE);
+    ClearBackground(BACKGROUND_COLOR);
 
+    DrawTexture(mainMenu->gameLogo, mainMenu->logoX, mainMenu->logoY, WHITE);
 
     drawButton(&(mainMenu->btLoadGame));
     drawButton(&(mainMenu->btNewGame));
@@ -14,7 +15,6 @@ void drawMainMenu(int *screenState, MainMenu *mainMenu)
     drawButton(&(mainMenu->btCredits));
     drawButton(&(mainMenu->btQuit));
 
-    DrawTexture(mainMenu->gameLogo, mainMenu->logoX, mainMenu->logoY, WHITE);
     
     EndDrawing();
 }
@@ -31,28 +31,27 @@ void mainMenuBtAction(MainMenu *menuScreen, int *screenState)
         *(screenState) = quit;
 }
 
-// TODO: verify two buttons selected at the same time
 MainMenu initMainMenu(int w_w, int w_h)
 {
-    float firstBtH = (float)(w_h / 4);
-    float xBtPos = (float)(w_w / 3);
+    float firstBtH = (float)(w_h / 2.7);
+    float xBtPos = (float)(w_w / 2.9);
     MainMenu window;
 
-    window.logoX = (float)(w_w / 3);
-    window.logoY = w_h/10;
+    window.logoX = (float)(w_w / 3.8);
+    window.logoY = w_h/14;
 
     window.gameLogo = LoadTexture(GAME_LOGO);
 
     window.btLoadGame = initButton((LoadTexture(BT_LOADGAME)), 3, LoadSound(BT_SOUND),
                                    (Vector2){xBtPos, firstBtH});
     window.btNewGame = initButton(LoadTexture(BT_NEWGAME), 3, LoadSound(BT_SOUND),
-                                  (Vector2){xBtPos, (float)(firstBtH * 1.5)});
+                                  (Vector2){xBtPos, (float)(firstBtH * 1.3)});
     window.btHighScores = initButton(LoadTexture(BT_HIGHSCORES), 3, LoadSound(BT_SOUND),
-                                     (Vector2){xBtPos, (float)(firstBtH * 2)});
+                                     (Vector2){xBtPos, (float)(firstBtH * 1.6)});
     window.btCredits = initButton(LoadTexture(BT_CREDITS), 3, LoadSound(BT_SOUND),
-                                  (Vector2){xBtPos, (float)(firstBtH * 2.5)});
+                                  (Vector2){xBtPos, (float)(firstBtH * 1.9)});
     window.btQuit = initButton(LoadTexture(BT_QUIT), 3, LoadSound(BT_SOUND),
-                               (Vector2){xBtPos, (float)(firstBtH * 3)});
+                               (Vector2){xBtPos, (float)(firstBtH * 2.2)});
 
     return window;
 }
