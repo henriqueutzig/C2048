@@ -1,6 +1,6 @@
 #include "includes/button.h"
 
-Button initButton(Texture texture, int numFrames, Sound sound, Vector2 position)
+Button initButton(Texture texture, int numFrames, Sound sound, Vector2 recSrc)
 {
     Button button;
 
@@ -8,10 +8,9 @@ Button initButton(Texture texture, int numFrames, Sound sound, Vector2 position)
     button.texture = texture;
     button.clickSound = sound;
     button.frameHeight = button.texture.height / numFrames;
-    button.position = (Rectangle){0, 0, texture.width, button.frameHeight};
-    button.bounds = (Rectangle){position.x, position.y, texture.width, button.frameHeight};
+    button.recSrc = (Rectangle){0, 0, texture.width, button.frameHeight};
+    button.bounds = (Rectangle){recSrc.x, recSrc.y, texture.width, button.frameHeight};
     button.state = NORMAL;
-    button.action = false;
 
     return button;
 }
@@ -32,7 +31,7 @@ bool buttonState(Button *button)
         }
         if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON))
         {
-            button->position.y = button->state * button->frameHeight;
+            button->recSrc.y = button->state * button->frameHeight;
             PlaySound(button->clickSound);
             return true;
         }
@@ -42,14 +41,14 @@ bool buttonState(Button *button)
         button->state = NORMAL;
     }
 
-    button->position.y = button->state * button->frameHeight;
+    button->recSrc.y = button->state * button->frameHeight;
 
     return false;
 }
 
 void drawButton(Button *button)
 {
-    DrawTextureRec(button->texture, button->position, (Vector2){button->bounds.x, button->bounds.y}, WHITE);
+    DrawTextureRec(button->texture, button->recSrc, (Vector2){button->bounds.x, button->bounds.y}, WHITE);
 }
 
 void deInitButton(Button *button)

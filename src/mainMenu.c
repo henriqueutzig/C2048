@@ -5,7 +5,7 @@ void drawMainMenu(int *screenState, MainMenu *mainMenu)
 {
     BeginDrawing();
 
-    ClearBackground(RAYWHITE);
+    ClearBackground(BACKGROUND_COLOR);
 
 
     drawButton(&(mainMenu->btLoadGame));
@@ -31,7 +31,6 @@ void mainMenuBtAction(MainMenu *menuScreen, int *screenState)
         *(screenState) = quit;
 }
 
-// TODO: verify two buttons selected at the same time
 MainMenu initMainMenu(int w_w, int w_h)
 {
     float firstBtH = (float)(w_h / 4);

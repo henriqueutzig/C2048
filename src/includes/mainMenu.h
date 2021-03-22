@@ -1,12 +1,5 @@
 #include "button.h"
-
-#define GAME_LOGO "src/resources/textures/logo.png"
-
-#define BT_LOADGAME "src/resources/textures/btLoadGame.png"
-#define BT_NEWGAME "src/resources/textures/btNewGame.png"
-#define BT_HIGHSCORES "src/resources/textures/btHighScores.png"
-#define BT_CREDITS "src/resources/textures/btCredits.png"
-#define BT_QUIT "src/resources/textures/btQuit.png"
+#include "assets.h"
 
 typedef struct MainMenu
 {
