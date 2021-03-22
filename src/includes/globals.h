@@ -8,7 +8,3 @@
 #include "window.h"
 
 // Scenes 
-
-// Defines
-#define DEFAULT_W 800
-#define DEFAULT_H 480

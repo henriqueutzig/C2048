@@ -1,5 +1,5 @@
-#define WINDOW_DW 800
-#define WINDOW_DH 450
+#define WINDOW_DW 680
+#define WINDOW_DH 480
 
 typedef struct Window
 {
@@ -13,5 +13,7 @@ typedef struct Window
 enum screenState {
     mainMenu,
     game,
-    credits
+    highScore,
+    credits,
+    quit
 };
