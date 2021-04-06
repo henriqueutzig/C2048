@@ -1,5 +1,6 @@
 #include "includes/globals.h"
 #include "includes/mainMenu.h"
+#include "includes/gameScene.h"
 
 int main(void)
 {
@@ -11,6 +12,9 @@ int main(void)
 
     // Main menu screen init
     MainMenu menuScreen = initMainMenu(window.width, window.height);
+
+    // GameScene screen init
+    GameScene gameScreen = initGameScene(window.width, window.height);
 
     SetTargetFPS(60);
     // Main Scene loop
@@ -25,13 +29,8 @@ int main(void)
             drawMainMenu(&window.screenState, &menuScreen);
             break;
         case game:
-            BeginDrawing();
-
-            ClearBackground(RAYWHITE);
-
-            DrawText("GameWindow", 190, 200, 20, LIGHTGRAY);
-
-            EndDrawing();
+            gameSceneAction(&gameScreen, &(window.screenState));
+            drawGameScene(&window.screenState, &gameScreen);
             break;
         case highScore:
             BeginDrawing();
@@ -54,6 +53,7 @@ int main(void)
         case quit:
             CloseAudioDevice();
             deInitMainMenu(&menuScreen);
+            deInitGameScene(&gameScreen);
             CloseWindow();
             return 0;
             break;
@@ -65,6 +65,7 @@ int main(void)
     // De-init stuff
     CloseAudioDevice();
     deInitMainMenu(&menuScreen);
+    deInitGameScene(&gameScreen);
     // Close window and OpenGL context
     CloseWindow();
 

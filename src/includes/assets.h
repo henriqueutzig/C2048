@@ -3,6 +3,12 @@
 
 #define GAME_LOGO TEXTURES_PATH "logo.png"
 
+// Game Scene
+#define BOARD_BG TEXTURES_PATH "board.png"
+#define RANKING_BLOCK TEXTURES_PATH "rankingBlock.png"
+#define SCORE_BLOCK TEXTURES_PATH "scoreBlock.png"
+#define MOVEMENTBLOCK TEXTURES_PATH "movementBlock.png"
+
 #define BT_LOADGAME TEXTURES_PATH "btLoadGame.png"
 #define BT_NEWGAME TEXTURES_PATH "btNewGame.png"
 #define BT_HIGHSCORES TEXTURES_PATH "btHighScores.png"

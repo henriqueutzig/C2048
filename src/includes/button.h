@@ -1,5 +1,4 @@
 #include "raylib.h"
-#include "assets.h"
 typedef struct Button
 {
     int numFrames;

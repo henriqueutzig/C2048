@@ -7,7 +7,6 @@ void drawMainMenu(int *screenState, MainMenu *mainMenu)
 
     ClearBackground(BACKGROUND_COLOR);
 
-
     drawButton(&(mainMenu->btLoadGame));
     drawButton(&(mainMenu->btNewGame));
     drawButton(&(mainMenu->btHighScores));
@@ -15,7 +14,7 @@ void drawMainMenu(int *screenState, MainMenu *mainMenu)
     drawButton(&(mainMenu->btQuit));
 
     DrawTexture(mainMenu->gameLogo, mainMenu->logoX, mainMenu->logoY, WHITE);
-    
+
     EndDrawing();
 }
 
@@ -38,7 +37,7 @@ MainMenu initMainMenu(int w_w, int w_h)
     MainMenu window;
 
     window.logoX = (float)(w_w / 3);
-    window.logoY = w_h/10;
+    window.logoY = w_h / 10;
 
     window.gameLogo = LoadTexture(GAME_LOGO);
 
