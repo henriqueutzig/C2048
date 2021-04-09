@@ -1,3 +1,6 @@
+#ifndef _MainMenu
+#define _MainMenu
+
 #include "button.h"
 #include "assets.h"
 #include "UI.h"
@@ -16,3 +19,4 @@ void drawMainMenu(MainMenu mainMenu);
 void mainMenuBtAction(MainMenu *menuScreen, int *screenState);
 MainMenu initMainMenu();
 void deInitMainMenu(MainMenu *mainMenu);
+#endif

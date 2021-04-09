@@ -1,3 +1,6 @@
+#ifndef _Button
+#define _Button
+
 #include "raylib.h"
 typedef struct Button
 {
@@ -22,3 +25,5 @@ Button initButton(Texture texture, int numFrames, Sound sound, Vector2 position)
 bool buttonState(Button *button);
 void drawButton(Button button);
 void deInitButton(Button *button);
+
+#endif

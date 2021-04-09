@@ -1,6 +1,7 @@
 #include "includes/globals.h"
 #include "includes/mainMenu.h"
 #include "includes/gameScene.h"
+#include "includes/creditsScene.h"
 
 int main(void)
 {
@@ -24,6 +25,9 @@ int main(void)
     // GameScene screen init
     GameScene gameScreen = initGameScene();
 
+    // CreditsScene screen init
+    CreditsScene creditsScreen = initCreditsScene();
+
     SetTargetFPS(60);
     // Main Scene loop
     while (!WindowShouldClose()) // Detect window close button or ESC key
@@ -45,22 +49,18 @@ int main(void)
 
             ClearBackground(RAYWHITE);
 
-            DrawText("highScoreWindow", 190, 200, 20, LIGHTGRAY);
+            DrawText("HighScoreWindow", 190, 200, 20, LIGHTGRAY);
 
             EndDrawing();
             break;
         case credits:
-            BeginDrawing();
-
-            ClearBackground(RAYWHITE);
-
-            DrawText("CreditsWindow", 190, 200, 20, LIGHTGRAY);
-
-            EndDrawing();
+            creditsSceneAction(&creditsScreen, &(window.screenState));
+            drawCreditsScene(creditsScreen);
             break;
         case quit:
             deInitMainMenu(&menuScreen);
             deInitGameScene(&gameScreen);
+            deInitCreditsScene(&creditsScreen);
             CloseAudioDevice();
             CloseWindow();
             return 0;
@@ -73,6 +73,7 @@ int main(void)
     // De-init stuff
     deInitMainMenu(&menuScreen);
     deInitGameScene(&gameScreen);
+    deInitCreditsScene(&creditsScreen);
     // Close window and OpenGL context
     CloseAudioDevice();
     CloseWindow();

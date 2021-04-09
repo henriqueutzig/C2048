@@ -23,6 +23,13 @@
 #define BT_CREDITS TEXTURES_PATH "btCredits.png"
 #define BT_QUIT TEXTURES_PATH "btQuit.png"
 
+// Credits
+// TODO(#11): sprite back to menu button
+#define BT_BACK TEXTURES_PATH ""
+#define GITHUB_ICON TEXTURES_PATH "github-icon.png"
+#define DRACULA_ICON TEXTURES_PATH "dracula-icon.png"
+#define RAYLIB_ICON TEXTURES_PATH "raylib-icon.png"
+
 #define BT_SOUND SOUNDS_PATH "buttonfx.wav"
 
 #define BACKGROUND_COLOR (Color){ 40, 42, 54, 255 }
