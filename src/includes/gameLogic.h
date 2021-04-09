@@ -1,6 +1,8 @@
 #include "raylib.h"
 #include "assets.h"
 
+#define BOARD_SIZE 4
+
 enum CardValue
 {
     C2 = 1,
@@ -16,16 +18,20 @@ enum CardValue
     C2048
 };
 
-typedef struct Card
-{
-    Texture2D texture;
-    int value;
-} Card;
+// typedef struct Card
+// {
+//     // retangulo de recorte da sprite
+//     Rectangle recSrc;
+//     int value;
+// } Card;
 
 typedef struct GameState
 {
-    Card *currentBoardState[4][4];
-    Card *oldBoardState[4][4];
+    int currentBoardState[BOARD_SIZE][BOARD_SIZE];
+    int oldBoardState[BOARD_SIZE][BOARD_SIZE];
+    Texture2D cardTexture;
     int movements;
     int score;
 } GameState;
+
+GameState initGameState(int currentBoardState[BOARD_SIZE][BOARD_SIZE], Texture2D cardTexture, int movements, int score);

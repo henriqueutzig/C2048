@@ -10,11 +10,19 @@ int main(void)
     InitWindow(window.width, window.height, window.name);
     InitAudioDevice();
 
+    // GameState init
+    int initialBoardState[BOARD_SIZE][BOARD_SIZE] = {{C2, C2, C4, C8},
+                                                     {C16, C32, C64, C128},
+                                                     {C256, C512, C1024, C2048},
+                                                     {0, 0, 0, 0}};
+
+    GameState gameState = initGameState(initialBoardState, LoadTexture(CARDS), 0, 0);
+
     // Main menu screen init
-    MainMenu menuScreen = initMainMenu(window.width, window.height);
+    MainMenu menuScreen = initMainMenu();
 
     // GameScene screen init
-    GameScene gameScreen = initGameScene(window.width, window.height);
+    GameScene gameScreen = initGameScene();
 
     SetTargetFPS(60);
     // Main Scene loop
@@ -26,11 +34,11 @@ int main(void)
         case mainMenu:
             // Buttons controll
             mainMenuBtAction(&menuScreen, &(window.screenState));
-            drawMainMenu(&window.screenState, &menuScreen);
+            drawMainMenu(menuScreen);
             break;
         case game:
-            gameSceneAction(&gameScreen, &(window.screenState));
-            drawGameScene(&window.screenState, &gameScreen);
+            gameSceneAction(&gameScreen, &(window.screenState), &gameState);
+            drawGameScene(gameScreen, gameState);
             break;
         case highScore:
             BeginDrawing();
@@ -51,9 +59,9 @@ int main(void)
             EndDrawing();
             break;
         case quit:
-            CloseAudioDevice();
             deInitMainMenu(&menuScreen);
             deInitGameScene(&gameScreen);
+            CloseAudioDevice();
             CloseWindow();
             return 0;
             break;
@@ -63,10 +71,10 @@ int main(void)
     }
 
     // De-init stuff
-    CloseAudioDevice();
     deInitMainMenu(&menuScreen);
     deInitGameScene(&gameScreen);
     // Close window and OpenGL context
+    CloseAudioDevice();
     CloseWindow();
 
     return 0;

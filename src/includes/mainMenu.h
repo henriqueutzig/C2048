@@ -1,11 +1,10 @@
 #include "button.h"
 #include "assets.h"
+#include "UI.h"
 
 typedef struct MainMenu
 {
-    Texture2D gameLogo;
-    float logoX;
-    float logoY;
+    ElementUI logo;
     Button btLoadGame;
     Button btNewGame;
     Button btCredits;
@@ -13,7 +12,7 @@ typedef struct MainMenu
     Button btQuit;
 } MainMenu;
 
-void drawMainMenu(int *screenState, MainMenu *mainMenu);
+void drawMainMenu(MainMenu mainMenu);
 void mainMenuBtAction(MainMenu *menuScreen, int *screenState);
-MainMenu initMainMenu(int w_w, int w_h);
+MainMenu initMainMenu();
 void deInitMainMenu(MainMenu *mainMenu);
