@@ -1,5 +1,12 @@
 #define TEXTURES_PATH "src/resources/textures/"
 #define SOUNDS_PATH "src/resources/audio/"
+#define SHADERS_PATH "src/resources/shaders/"
+
+// shader related
+#define SCAN_LINES SHADERS_PATH "scanlines.fs"
+#define VCR_DIST SHADERS_PATH "VCRDist.fs"
+#define RGB_NOISE TEXTURES_PATH "rgbNoise.png"
+
 
 #define GAME_LOGO TEXTURES_PATH "logo.png"
 

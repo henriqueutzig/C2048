@@ -1,7 +1,7 @@
 #include "includes/mainMenu.h"
 #include "includes/window.h"
 
-void drawMainMenu(MainMenu mainMenu)
+void drawMainMenu(MainMenu mainMenu, Shader shader)
 {
     BeginDrawing();
 
@@ -13,8 +13,10 @@ void drawMainMenu(MainMenu mainMenu)
     drawButton(mainMenu.btCredits);
     drawButton(mainMenu.btQuit);
 
+    BeginShaderMode(shader);
     drawElementUI(mainMenu.logo);
-  
+    EndShaderMode();
+
     EndDrawing();
 }
 

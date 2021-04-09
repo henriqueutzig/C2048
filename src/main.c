@@ -4,11 +4,22 @@
 
 int main(void)
 {
+    SetConfigFlags(FLAG_MSAA_4X_HINT);
 
     // Window initialization
     Window window = {WINDOW_DW, WINDOW_DH, mainMenu, "C2048", true};
+
     InitWindow(window.width, window.height, window.name);
     InitAudioDevice();
+
+    Shader postProcess = LoadShader(0, SCAN_LINES);
+    int noiseLoc = GetShaderLocation(postProcess, "textureNoise");
+    int resolutionLoc = GetShaderLocation(postProcess, "resolution");
+    int timeLoc = GetShaderLocation(postProcess, "time");
+
+    float resolution[2] = {window.width, window.height};
+    SetShaderValueTexture(postProcess, noiseLoc, LoadTexture(RGB_NOISE));
+    SetShaderValue(postProcess, resolutionLoc, resolution, UNIFORM_VEC2);
 
     // GameState init
     int initialBoardState[BOARD_SIZE][BOARD_SIZE] = {{C2, C2, C4, C8},
@@ -24,17 +35,21 @@ int main(void)
     // GameScene screen init
     GameScene gameScreen = initGameScene();
 
+    float totalTime = 0.0f;
+
     SetTargetFPS(60);
     // Main Scene loop
     while (!WindowShouldClose()) // Detect window close button or ESC key
     {
+        totalTime += GetFrameTime();
+        SetShaderValue(postProcess, timeLoc, &totalTime, UNIFORM_FLOAT);
 
         switch (window.screenState)
         {
         case mainMenu:
             // Buttons controll
             mainMenuBtAction(&menuScreen, &(window.screenState));
-            drawMainMenu(menuScreen);
+            drawMainMenu(menuScreen, postProcess);
             break;
         case game:
             gameSceneAction(&gameScreen, &(window.screenState), &gameState);
@@ -61,6 +76,7 @@ int main(void)
         case quit:
             deInitMainMenu(&menuScreen);
             deInitGameScene(&gameScreen);
+            UnloadShader(postProcess);
             CloseAudioDevice();
             CloseWindow();
             return 0;
@@ -74,6 +90,7 @@ int main(void)
     deInitMainMenu(&menuScreen);
     deInitGameScene(&gameScreen);
     // Close window and OpenGL context
+    UnloadShader(postProcess);
     CloseAudioDevice();
     CloseWindow();
 

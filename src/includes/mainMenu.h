@@ -12,7 +12,7 @@ typedef struct MainMenu
     Button btQuit;
 } MainMenu;
 
-void drawMainMenu(MainMenu mainMenu);
+void drawMainMenu(MainMenu mainMenu, Shader shader);
 void mainMenuBtAction(MainMenu *menuScreen, int *screenState);
 MainMenu initMainMenu();
 void deInitMainMenu(MainMenu *mainMenu);
