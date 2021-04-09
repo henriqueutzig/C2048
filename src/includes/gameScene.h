@@ -1,5 +1,6 @@
 #include "UI.h"
 #include "gameLogic.h"
+#include "button.h"
 
 #define MAX_STRING_SIZE 40
 
@@ -27,6 +28,7 @@ typedef struct GameScene
     ElementUI saveKey;
     ElementUI movementsKey;
     ElementUI medal;
+    Button btBackToMenu;
 } GameScene;
 
 void drawBoardCards(GameState gameState, ElementUI board);
