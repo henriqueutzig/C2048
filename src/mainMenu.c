@@ -14,7 +14,7 @@ void drawMainMenu(MainMenu mainMenu)
     drawButton(mainMenu.btQuit);
 
     drawElementUI(mainMenu.logo);
-
+  
     EndDrawing();
 }
 
