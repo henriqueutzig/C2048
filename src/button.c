@@ -46,9 +46,9 @@ bool buttonState(Button *button)
     return false;
 }
 
-void drawButton(Button *button)
+void drawButton(Button button)
 {
-    DrawTextureRec(button->texture, button->recSrc, (Vector2){button->bounds.x, button->bounds.y}, WHITE);
+    DrawTextureRec(button.texture, button.recSrc, (Vector2){button.bounds.x, button.bounds.y}, WHITE);
 }
 
 void deInitButton(Button *button)

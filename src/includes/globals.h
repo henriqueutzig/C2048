@@ -6,5 +6,3 @@
 
 // Our libraries 
 #include "window.h"
-
-// Scenes 

@@ -1,5 +1,4 @@
 #include "raylib.h"
-#include "assets.h"
 typedef struct Button
 {
     int numFrames;
@@ -21,5 +20,5 @@ enum ButtonState
 
 Button initButton(Texture texture, int numFrames, Sound sound, Vector2 position);
 bool buttonState(Button *button);
-void drawButton(Button *button);
+void drawButton(Button button);
 void deInitButton(Button *button);
