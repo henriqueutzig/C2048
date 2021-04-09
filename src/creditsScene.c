@@ -36,14 +36,14 @@ CreditsScene initCreditsScene()
     CreditsScene credits;
     strcpy(credits.text, DEFAULT_TEXT);
     credits.btColorPallet = initButton(LoadTexture(DRACULA_ICON), 1, LoadSound(BT_SOUND),
-                                       (Vector2){144, 227});
+                                       (Vector2){144, 247});
     credits.btRaylib = initButton(LoadTexture(RAYLIB_ICON), 1, LoadSound(BT_SOUND),
-                                    (Vector2){273, 227});
+                                    (Vector2){273, 247});
     credits.btGitPage = initButton(LoadTexture(GITHUB_ICON), 1, LoadSound(BT_SOUND),
-                                   (Vector2){402, 227});
+                                   (Vector2){402, 247});
 
-    credits.btMainMenu = initButton(LoadTexture(BT_QUIT), 2, LoadSound(BT_SOUND),
-                                    (Vector2){247, 397});
+    credits.btMainMenu = initButton(LoadTexture(BT_BACK), 1, LoadSound(BT_SOUND),
+                                    (Vector2){20, 20});
 
     return credits;
 }

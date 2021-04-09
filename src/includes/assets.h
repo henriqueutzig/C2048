@@ -24,8 +24,7 @@
 #define BT_QUIT TEXTURES_PATH "btQuit.png"
 
 // Credits
-// TODO(#11): sprite back to menu button
-#define BT_BACK TEXTURES_PATH ""
+#define BT_BACK TEXTURES_PATH "back-arrow2.png"
 #define GITHUB_ICON TEXTURES_PATH "github-icon.png"
 #define DRACULA_ICON TEXTURES_PATH "dracula-icon.png"
 #define RAYLIB_ICON TEXTURES_PATH "raylib-icon.png"
