@@ -12,12 +12,9 @@ int main(void)
     InitAudioDevice();
 
     // GameState init
-    int initialBoardState[BOARD_SIZE][BOARD_SIZE] = {{C2, C2, C4, C8},
-                                                     {C16, C32, C64, C128},
-                                                     {C256, C512, C1024, C2048},
-                                                     {0, 0, 0, 0}};
+    Card initialBoardState[BOARD_SIZE][BOARD_SIZE] = {{(Card){getRectSpriteFromMatrix(C2, 3, 4, CARD_SIZE, CARD_SIZE), C2}, (Card){getRectSpriteFromMatrix(C4, 3, 4, CARD_SIZE, CARD_SIZE), C4}}};
 
-    GameState gameState = initGameState(initialBoardState, LoadTexture(CARDS), 0, 0);
+    GameState gameState = initGameState(&initialBoardState[0][0], LoadTexture(CARDS), 0, 0);
 
     // Main menu screen init
     MainMenu menuScreen = initMainMenu();

@@ -1,8 +1,8 @@
 #include "includes/gameLogic.h"
 
-GameState initGameState(int currentBoardState[BOARD_SIZE][BOARD_SIZE], Texture2D cardTexture, int movements, int score)
+GameState initGameState(Card *currentBoardState, Texture2D cardTexture, int movements, int score)
 {
-    GameState gameState = (GameState){.oldBoardState = {0}};
+    GameState gameState = (GameState){.oldBoardState = {NULL}};
     gameState.cardTexture = cardTexture;
     gameState.movements = movements;
     gameState.score = score;
@@ -10,9 +10,8 @@ GameState initGameState(int currentBoardState[BOARD_SIZE][BOARD_SIZE], Texture2D
     {
         for (int j = 0; j < BOARD_SIZE; j++)
         {
-            gameState.currentBoardState[i][j] = currentBoardState[i][j];
+            gameState.currentBoardState[i][j] = (currentBoardState + i * BOARD_SIZE + j)->value == 0 ? NULL : (currentBoardState + i * BOARD_SIZE + j);
         }
     }
-    //memcpy(gameState.currentBoardState, currentBoardState, sizeof(currentBoardState)); // TODO: ver decay
     return gameState;
 }

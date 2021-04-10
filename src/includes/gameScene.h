@@ -5,7 +5,6 @@
 #define MAX_STRING_SIZE 40
 
 #define MARGIN_CARD 16
-#define CARD_SIZE 80
 
 #define MEDAL_SIZE_W 12
 #define MEDAL_SIZE_H 15

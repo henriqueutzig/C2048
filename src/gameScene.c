@@ -56,8 +56,8 @@ void drawBoardCards(GameState gameState, ElementUI board)
     {
         for (int j = 0; j < BOARD_SIZE; j++)
         {
-            Rectangle recSrc = getRectSpriteFromMatrix(gameState.currentBoardState[i][j], 3, 4, CARD_SIZE, CARD_SIZE);
-            DrawTextureRec(gameState.cardTexture, recSrc,
+            DrawTextureRec(gameState.cardTexture,
+                           gameState.currentBoardState[i][j] == NULL ? REC_SRC_NULL : gameState.currentBoardState[i][j]->recSrc,
                            (Vector2){(board.pos.x + MARGIN_CARD) + (j * (MARGIN_CARD + CARD_SIZE)),
                                      (board.pos.y + MARGIN_CARD) + (i * (MARGIN_CARD + CARD_SIZE))},
                            WHITE);
@@ -92,7 +92,7 @@ void drawGameScene(GameScene gameScene, GameState gameState)
 void gameSceneAction(GameScene *gameScene, int *screenState, GameState *gameState)
 {
     // Acoes de tecla aqui
-    if(buttonState(&(gameScene->btBackToMenu)))
+    if (buttonState(&(gameScene->btBackToMenu)))
         *screenState = mainMenu;
 }
 
