@@ -84,12 +84,16 @@ void drawGameScene(GameScene gameScene, GameState gameState)
     drawElementUI(gameScene.saveKey);
     drawElementUI(gameScene.movementsKey);
 
+    drawButton(gameScene.btBackToMenu);
+
     EndDrawing();
 }
 
 void gameSceneAction(GameScene *gameScene, int *screenState, GameState *gameState)
 {
     // Acoes de tecla aqui
+    if(buttonState(&(gameScene->btBackToMenu)))
+        *screenState = mainMenu;
 }
 
 GameScene initGameScene()
@@ -106,6 +110,9 @@ GameScene initGameScene()
     window.movementsKey = initElementUI(LoadTexture(MOVEMENTS_KEY), (Vector2){539, 349});
 
     window.medal = initElementUI(LoadTexture(MEDAL_SMALL), (Vector2){0, 0});
+
+    window.btBackToMenu = initButton(LoadTexture(BT_BACK), 1, LoadSound(BT_SOUND), (Vector2){20, 10});
+
     return window;
 }
 
@@ -120,4 +127,6 @@ void deInitGameScene(GameScene *gameScene)
     deinitElementUI(&gameScene->newGameKey);
     deinitElementUI(&gameScene->saveKey);
     deinitElementUI(&gameScene->movementsKey);
+
+    deInitButton(&(gameScene->btBackToMenu));
 }
