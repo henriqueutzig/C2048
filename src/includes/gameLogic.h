@@ -27,6 +27,14 @@ enum CardValue
     C2048
 };
 
+enum move
+{
+    UP = 0,
+    RIGHT,
+    DOWN,
+    LEFT,    
+};
+
 typedef struct Card
 {
     Rectangle recSrc;
@@ -46,3 +54,4 @@ GameState initGameState(Card *currentBoardState, Texture2D cardTexture, int move
 void gameLogicAction(GameState *gameState, Card *gameBoard);
 void moveCardsUp(GameState *gameState, Card *gameBoard);
 void generateRandomCard(GameState *gameState, Card *gameboard);
+void rotateBoardLeft(GameState *gameState);

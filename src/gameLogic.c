@@ -19,34 +19,57 @@ GameState initGameState(Card *currentBoardState, Texture2D cardTexture, int move
 void gameLogicAction(GameState *gameState, Card *gameBoard)
 {
     // ARROW-UP
-    if(IsKeyPressed(KEY_UP)) 
+    if (IsKeyPressed(KEY_UP))
         moveCardsUp(gameState, gameBoard);
     // ARROW-DOWN
-    // if(IsKeyPressed(KEY_DOWN)) 
-        // moveCardsDown(gameState);
+    // if(IsKeyPressed(KEY_DOWN))
+    // moveCardsDown(gameState);
     // ARROW-LEFT
-    // if(IsKeyPressed(KEY_LEFT)) 
-        // moveCardsLeft(gameState);
+    // if(IsKeyPressed(KEY_LEFT))
+    // moveCardsLeft(gameState);
     // ARROW-RIGHT
-    // if(IsKeyPressed(KEY_RIGHT)) 
-        // moveCardsRight(gameState);
+    // if(IsKeyPressed(KEY_RIGHT))
+    // moveCardsRight(gameState);
 
-    // Debug newCard .
-    if(IsKeyPressed(KEY_F1)) 
+    // Debug
+    if (IsKeyPressed(KEY_F1))
+    {
+        // for(int i = 0; i < 4 ; i++)
+        rotateBoardLeft(gameState);
+    }
+    if (IsKeyPressed(KEY_F2))
+    {
+        // for(int i = 0; i < 4 ; i++)
         generateRandomCard(gameState, gameBoard);
+    }
 }
 
 void moveCardsUp(GameState *gameState, Card *gameBoard)
 {
     bool isValidMove = false;
 
-    printf("\nUp\n");
-    if(isValidMove)
+    if (isValidMove)
         generateRandomCard(gameState, gameBoard);
 }
 
+void rotateBoardLeft(GameState *gameState)
+{
+    // based on https://github.com/mevdschee/2048.c/blob/main/2048.c rotateBoard function
+    for (int r = 0; r < BOARD_SIZE / 2; r++)
+    {
+        for (int c = r; c < BOARD_SIZE - r - 1; c++)
+        {
+            Card *tmp = *(gameState->currentBoardState[0] + r * BOARD_SIZE + c);
+            *(gameState->currentBoardState[0] + r * BOARD_SIZE + c) = *(gameState->currentBoardState[0] + c * BOARD_SIZE + (BOARD_SIZE - r - 1));
+            *(gameState->currentBoardState[0] + c * BOARD_SIZE + (BOARD_SIZE - r - 1)) = *(gameState->currentBoardState[0] + (BOARD_SIZE - r - 1) * BOARD_SIZE + (BOARD_SIZE - c - 1));
+            *(gameState->currentBoardState[0] + (BOARD_SIZE - r - 1) * BOARD_SIZE + (BOARD_SIZE - c - 1)) = *(gameState->currentBoardState[0] + (BOARD_SIZE - c - 1) * BOARD_SIZE + r);
+            *(gameState->currentBoardState[0] + (BOARD_SIZE - c - 1) * BOARD_SIZE + r) = tmp;
+        }
+    }
+}
+
 void generateRandomCard(GameState *gameState, Card *gameBoard)
-{    
+{
     int x = 0 + (rand() % ((BOARD_SIZE - 1) - 0 + 1));
     int y = 0 + (rand() % ((BOARD_SIZE - 1) - 0 + 1));
 
