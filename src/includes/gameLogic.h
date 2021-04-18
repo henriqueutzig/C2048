@@ -52,6 +52,8 @@ typedef struct GameState
 
 GameState initGameState(Card *currentBoardState, Texture2D cardTexture, int movements, int score);
 void gameLogicAction(GameState *gameState, Card *gameBoard);
+void moveCards(GameState *gameState, Card *gameBoard, int moveType);
 void moveCardsUp(GameState *gameState, Card *gameBoard);
 void generateRandomCard(GameState *gameState, Card *gameboard);
 void rotateBoardLeft(GameState *gameState);
+bool boardAsEmptySlots(GameState *gameState);

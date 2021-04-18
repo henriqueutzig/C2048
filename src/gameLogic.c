@@ -20,16 +20,16 @@ void gameLogicAction(GameState *gameState, Card *gameBoard)
 {
     // ARROW-UP
     if (IsKeyPressed(KEY_UP))
-        moveCardsUp(gameState, gameBoard);
+        moveCards(gameState, gameBoard, UP);
     // ARROW-DOWN
-    // if(IsKeyPressed(KEY_DOWN))
-    // moveCardsDown(gameState);
+    if(IsKeyPressed(KEY_DOWN))
+        moveCards(gameState, gameBoard, DOWN);
     // ARROW-LEFT
-    // if(IsKeyPressed(KEY_LEFT))
-    // moveCardsLeft(gameState);
+    if(IsKeyPressed(KEY_LEFT))
+        moveCards(gameState, gameBoard, LEFT);
     // ARROW-RIGHT
-    // if(IsKeyPressed(KEY_RIGHT))
-    // moveCardsRight(gameState);
+    if(IsKeyPressed(KEY_RIGHT))
+        moveCards(gameState, gameBoard, RIGHT);
 
     // Debug
     if (IsKeyPressed(KEY_F1))
@@ -39,17 +39,55 @@ void gameLogicAction(GameState *gameState, Card *gameBoard)
     }
     if (IsKeyPressed(KEY_F2))
     {
-        // for(int i = 0; i < 4 ; i++)
-        generateRandomCard(gameState, gameBoard);
+        if (boardAsEmptySlots(gameState))
+            generateRandomCard(gameState, gameBoard);
+    }
+    if (IsKeyPressed(KEY_F3))
+    {
+        if (boardAsEmptySlots(gameState))
+            printf("\nEmpty\n");
+        else
+            printf("\nNOT Empty\n");
     }
 }
 
 void moveCardsUp(GameState *gameState, Card *gameBoard)
 {
     bool isValidMove = false;
-
-    if (isValidMove)
+    // TODO: I'm baging me head against the keyboard for 3 hours and I couldn't implement this 
+    if (isValidMove && boardAsEmptySlots(gameState))
         generateRandomCard(gameState, gameBoard);
+}
+
+void moveCards(GameState *gameState, Card *gameBoard, int moveType)
+{
+    if (moveType > 0)
+    {
+        for (int i = 0; i < moveType; i++)
+            rotateBoardLeft(gameState);
+        moveCardsUp(gameState, gameBoard);
+        for (int i = 0, n = (BOARD_SIZE - moveType); i < n; i++)
+            rotateBoardLeft(gameState);
+        
+    }
+    else
+        moveCardsUp(gameState, gameBoard);
+}
+
+bool boardAsEmptySlots(GameState *gameState)
+{
+    for (int r = 0; r < BOARD_SIZE; r++)
+    {
+        for (int c = 0; c < BOARD_SIZE; c++)
+        {
+            if (*(gameState->currentBoardState[0] + r * BOARD_SIZE + c) == NULL)
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
 
 void rotateBoardLeft(GameState *gameState)
@@ -68,12 +106,13 @@ void rotateBoardLeft(GameState *gameState)
     }
 }
 
+// Only call this function when the currentBoardState is the same as initialBoardState
 void generateRandomCard(GameState *gameState, Card *gameBoard)
 {
     int x = 0 + (rand() % ((BOARD_SIZE - 1) - 0 + 1));
     int y = 0 + (rand() % ((BOARD_SIZE - 1) - 0 + 1));
 
-    while (*(gameState->currentBoardState[0] + y * BOARD_SIZE + x) != NULL)
+    while ((*(gameState->currentBoardState[0] + y * BOARD_SIZE + x) != NULL))
     {
         x = 0 + (rand() % ((BOARD_SIZE - 1) - 0 + 1));
         y = 0 + (rand() % ((BOARD_SIZE - 1) - 0 + 1));
