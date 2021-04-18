@@ -5,7 +5,7 @@
 
 int main(void)
 {
-
+    srand(time(NULL));
     // Window initialization
     Window window = {WINDOW_DW, WINDOW_DH, mainMenu, "C2048", true};
     InitWindow(window.width, window.height, window.name);
@@ -38,6 +38,7 @@ int main(void)
             drawMainMenu(menuScreen);
             break;
         case game:
+            gameLogicAction(&gameState, &initialBoardState[0][0]);
             gameSceneAction(&gameScreen, &(window.screenState), &gameState);
             drawGameScene(gameScreen, gameState);
             break;

@@ -1,7 +1,11 @@
 #include "raylib.h"
 #include "assets.h"
+#include "UI.h"
 #include <stddef.h>
 #include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
 #define BOARD_SIZE 4
 #define CARD_SIZE 80
@@ -39,3 +43,6 @@ typedef struct GameState
 } GameState;
 
 GameState initGameState(Card *currentBoardState, Texture2D cardTexture, int movements, int score);
+void gameLogicAction(GameState *gameState, Card *gameBoard);
+void moveCardsUp(GameState *gameState, Card *gameBoard);
+void generateRandomCard(GameState *gameState, Card *gameboard);
