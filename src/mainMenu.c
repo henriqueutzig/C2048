@@ -1,13 +1,14 @@
 #include "includes/mainMenu.h"
 #include "includes/window.h"
 
-void drawMainMenu(MainMenu mainMenu)
+void drawMainMenu(MainMenu mainMenu, bool existsSave)
 {
     BeginDrawing();
 
     ClearBackground(BACKGROUND_COLOR);
 
-    drawButton(mainMenu.btLoadGame);
+    if(existsSave)
+        drawButton(mainMenu.btLoadGame);
     drawButton(mainMenu.btNewGame);
     drawButton(mainMenu.btHighScores);
     drawButton(mainMenu.btCredits);

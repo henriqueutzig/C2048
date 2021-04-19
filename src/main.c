@@ -2,6 +2,7 @@
 #include "includes/mainMenu.h"
 #include "includes/gameScene.h"
 #include "includes/creditsScene.h"
+#include "includes/saveManager.h"
 
 int main(void)
 {
@@ -11,9 +12,25 @@ int main(void)
     InitWindow(window.width, window.height, window.name);
     InitAudioDevice();
 
-    // GameState init
-    Card initialBoardState[BOARD_SIZE][BOARD_SIZE] = {{(Card){getRectSpriteFromMatrix(C2, 3, 4, CARD_SIZE, CARD_SIZE), C2}, (Card){getRectSpriteFromMatrix(C4, 3, 4, CARD_SIZE, CARD_SIZE), C4}},
-                                                     {(Card){getRectSpriteFromMatrix(C16, 3, 4, CARD_SIZE, CARD_SIZE), C16}}};
+    // SaveManager init
+    SavedGame saveData = loadGame();
+
+    //GameState init
+    Card initialBoardState[BOARD_SIZE][BOARD_SIZE];
+    if (saveData.exists)
+    {
+        for (int r = 0; r < BOARD_SIZE; r++)
+            for (int c = 0; c < BOARD_SIZE; c++)
+                initialBoardState[r][c] = saveData.boardState[r][c];
+    }
+    else
+    {
+        for (int r = 0; r < BOARD_SIZE; r++)
+            for (int c = 0; c < BOARD_SIZE; c++)
+                initialBoardState[r][c] = CARD_VOID;
+        // Card initialBoardState[BOARD_SIZE][BOARD_SIZE] = {{(Card){getRectSpriteFromMatrix(C2, 3, 4, CARD_SIZE, CARD_SIZE), C2}, (Card){getRectSpriteFromMatrix(C4, 3, 4, CARD_SIZE, CARD_SIZE), C4}},
+                                                     //{(Card){getRectSpriteFromMatrix(C16, 3, 4, CARD_SIZE, CARD_SIZE), C16}}};
+    }
 
     GameState gameState = initGameState(&initialBoardState[0][0], LoadTexture(CARDS), 0, 0);
 
@@ -30,13 +47,17 @@ int main(void)
     // Main Scene loop
     while (!WindowShouldClose()) // Detect window close button or ESC key
     {
-
+        // Debug SaveGame
+        if (IsKeyPressed(KEY_S))
+        {
+            saveGame(gameState, &initialBoardState[0][0]);
+        }
         switch (window.screenState)
         {
         case mainMenu:
-            // Buttons controll
+            // TODO: make new game button not use the saveData board
             mainMenuBtAction(&menuScreen, &(window.screenState));
-            drawMainMenu(menuScreen);
+            drawMainMenu(menuScreen, saveData.exists);
             break;
         case game:
             gameLogicAction(&gameState, &initialBoardState[0][0]);
