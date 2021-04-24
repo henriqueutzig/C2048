@@ -2,6 +2,7 @@
 #include "includes/mainMenu.h"
 #include "includes/gameScene.h"
 #include "includes/creditsScene.h"
+#include "includes/ranking.h"
 
 int main(void)
 {
@@ -27,6 +28,10 @@ int main(void)
 
     // CreditsScene screen init
     CreditsScene creditsScreen = initCreditsScene();
+
+    // Ranking init 
+    Ranker rankers[10];
+    loadRankers(&rankers[0]);
 
     SetTargetFPS(60);
     // Main Scene loop
