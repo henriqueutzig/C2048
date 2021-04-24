@@ -1,5 +1,4 @@
 #include "includes/gameLogic.h"
-#include "includes/saveManager.h"
 
 GameState initGameState(Card *currentBoardState, Texture2D cardTexture, int movements, int score)
 {
@@ -17,7 +16,7 @@ GameState initGameState(Card *currentBoardState, Texture2D cardTexture, int move
     return gameState;
 }
 
-void gameLogicAction(GameState *gameState, Card *gameBoard)
+void gameLogicAction(GameState *gameState, Card *gameBoard, SavedGame *saveData)
 {
     // ARROW-UP
     if (IsKeyPressed(KEY_UP))
@@ -32,7 +31,7 @@ void gameLogicAction(GameState *gameState, Card *gameBoard)
     if (IsKeyPressed(KEY_RIGHT))
         moveCards(gameState, gameBoard, RIGHT);
     if (IsKeyPressed(KEY_S))
-        saveGame(*(gameState), gameBoard);
+        saveGame(*(gameState), gameBoard, saveData);
 
     // Debug
     if (IsKeyPressed(KEY_F1))
@@ -111,15 +110,14 @@ void rotateBoardLeft(GameState *gameState)
 // Only call this function when the currentBoardState is the same as initialBoardState
 void generateRandomCard(GameState *gameState, Card *gameBoard)
 {
-    int x; // = 0 + (rand() % ((BOARD_SIZE - 1) - 0 + 1));
-    int y; // = 0 + (rand() % ((BOARD_SIZE - 1) - 0 + 1));
+    int x, y;
 
     do
     {
         x = 0 + (rand() % ((BOARD_SIZE - 1) - 0 + 1));
         y = 0 + (rand() % ((BOARD_SIZE - 1) - 0 + 1));
     } while ((*(gameState->currentBoardState[0] + y * BOARD_SIZE + x) != NULL));
-    
+
     int newCardEnum = (1 + (rand() % (10 - 1 + 1))) > 9 ? C4 : C2;
     Card newCard = {getRectSpriteFromMatrix(newCardEnum, 3, 4, CARD_SIZE, CARD_SIZE), newCardEnum};
 
@@ -127,4 +125,44 @@ void generateRandomCard(GameState *gameState, Card *gameBoard)
     // Somehow it works, so lets try and not touch it
     *(gameBoard + y * BOARD_SIZE + x) = newCard;
     *(gameState->currentBoardState[0] + y * BOARD_SIZE + x) = (gameBoard + y * BOARD_SIZE + x);
+}
+
+SavedGame loadGame()
+{
+    FILE *saveFile = fopen(SGAME_PATH, "rb+");
+    if (saveFile == NULL)
+    {
+        return (SavedGame){false, {}, {}};
+    }
+
+    SavedGame data;
+    fread(&data, sizeof(SavedGame), 1, saveFile);
+    fflush(saveFile);
+    fclose(saveFile);
+
+    data.exists = true;
+
+    return data;
+}
+
+bool saveGame(GameState gameState, Card *boardState, SavedGame *saveData)
+{
+    FILE *saveFile = fopen(SGAME_PATH, "wb+");
+    if (saveFile == NULL)
+    {
+        fprintf(stderr, "\nErro ao abrir o arquivo\n");
+        return false;
+    }
+
+    saveData->exists = true;
+    saveData->gameState = gameState;
+    for (int r = 0; r < BOARD_SIZE; r++)
+        for (int c = 0; c < BOARD_SIZE; c++)
+            saveData->boardState[r][c] = *(boardState + r * BOARD_SIZE + c);
+
+    fwrite(saveData, sizeof(SavedGame), 1, saveFile);
+    fflush(saveFile);
+    fclose(saveFile);
+
+    return true;
 }

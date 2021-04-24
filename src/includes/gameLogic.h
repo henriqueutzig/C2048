@@ -15,6 +15,10 @@
 #define REC_SRC_NULL (Rectangle){ 0, 0, CARD_SIZE, CARD_SIZE }
 #define CARD_VOID (Card) {REC_SRC_NULL, 0 }
 
+#define FILES_PATH "src/files/saves/"
+#define SGAME_PATH FILES_PATH "game.bin"
+#define SHIGHSCORE_PATH "highscore.txt"
+
 enum CardValue
 {
     C2 = 1,
@@ -53,12 +57,22 @@ typedef struct GameState
     int score;
 } GameState;
 
+typedef struct SavedGame
+{
+    bool exists;
+    Card boardState[BOARD_SIZE][BOARD_SIZE];
+    GameState gameState;
+} SavedGame;
+
 GameState initGameState(Card *currentBoardState, Texture2D cardTexture, int movements, int score);
-void gameLogicAction(GameState *gameState, Card *gameBoard);
+void gameLogicAction(GameState *gameState, Card *gameBoard, SavedGame *saveData);
 void moveCards(GameState *gameState, Card *gameBoard, int moveType);
 void moveCardsUp(GameState *gameState, Card *gameBoard);
 void generateRandomCard(GameState *gameState, Card *gameboard);
 void rotateBoardLeft(GameState *gameState);
 bool boardAsEmptySlots(GameState *gameState);
+
+SavedGame loadGame();
+bool saveGame(GameState gameState, Card *boardState, SavedGame *saveData);
 
 #endif

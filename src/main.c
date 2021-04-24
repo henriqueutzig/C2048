@@ -2,7 +2,6 @@
 #include "includes/mainMenu.h"
 #include "includes/gameScene.h"
 #include "includes/creditsScene.h"
-#include "includes/saveManager.h"
 
 int main(void)
 {
@@ -17,12 +16,6 @@ int main(void)
 
     //GameState init
     Card initialBoardState[BOARD_SIZE][BOARD_SIZE] = {CARD_VOID};
-    if (saveData.exists)
-    {
-        for (int r = 0; r < BOARD_SIZE; r++)
-            for (int c = 0; c < BOARD_SIZE; c++)
-                initialBoardState[r][c] = saveData.boardState[r][c];
-    }
 
     GameState gameState = initGameState(&initialBoardState[0][0], LoadTexture(CARDS), 0, 0);
 
@@ -39,18 +32,15 @@ int main(void)
     // Main Scene loop
     while (!WindowShouldClose()) // Detect window close button or ESC key
     {
-        // Checks if there is a save file
-        saveData = loadGame();
-
         switch (window.screenState)
         {
         case mainMenu:
             // TODO: make new game button not use the saveData board
-            mainMenuBtAction(&menuScreen, &(window.screenState));
+            mainMenuBtAction(&menuScreen, &(window.screenState), &initialBoardState[0][0], saveData, &gameState);
             drawMainMenu(menuScreen, saveData.exists);
             break;
         case game:
-            gameLogicAction(&gameState, &initialBoardState[0][0]);
+            gameLogicAction(&gameState, &initialBoardState[0][0], &saveData);
             gameSceneAction(&gameScreen, &(window.screenState), &gameState);
             drawGameScene(gameScreen, gameState);
             break;

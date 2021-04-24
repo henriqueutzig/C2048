@@ -3,6 +3,7 @@
 
 #include "button.h"
 #include "assets.h"
+#include "gameLogic.h"
 #include "UI.h"
 
 typedef struct MainMenu
@@ -16,7 +17,7 @@ typedef struct MainMenu
 } MainMenu;
 
 void drawMainMenu(MainMenu mainMenu, bool existsSave);
-void mainMenuBtAction(MainMenu *menuScreen, int *screenState);
+void mainMenuBtAction(MainMenu *menuScreen, int *screenState, Card *initialBoardState, SavedGame saveData, GameState *gameState);
 MainMenu initMainMenu();
 void deInitMainMenu(MainMenu *mainMenu);
 #endif

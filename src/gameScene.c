@@ -75,8 +75,8 @@ void drawGameScene(GameScene gameScene, GameState gameState)
 
     drawBoardCards(gameState, gameScene.board);
 
-    drawScoreBlock(gameScene.scoreBlock, 10);
-    drawMovementBlock(gameScene.movementBlock, 70);
+    drawScoreBlock(gameScene.scoreBlock, gameState.score);
+    drawMovementBlock(gameScene.movementBlock, gameState.movements);
     drawRankingBlock(gameScene.rankingBlock, gameScene.medal, testNames, 4);
 
     drawElementUI(gameScene.quitKey);
