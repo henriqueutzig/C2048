@@ -1,4 +1,5 @@
 #include "includes/gameLogic.h"
+#include "includes/saveManager.h"
 
 GameState initGameState(Card *currentBoardState, Texture2D cardTexture, int movements, int score)
 {
@@ -22,14 +23,16 @@ void gameLogicAction(GameState *gameState, Card *gameBoard)
     if (IsKeyPressed(KEY_UP))
         moveCards(gameState, gameBoard, UP);
     // ARROW-DOWN
-    if(IsKeyPressed(KEY_DOWN))
+    if (IsKeyPressed(KEY_DOWN))
         moveCards(gameState, gameBoard, DOWN);
     // ARROW-LEFT
-    if(IsKeyPressed(KEY_LEFT))
+    if (IsKeyPressed(KEY_LEFT))
         moveCards(gameState, gameBoard, LEFT);
     // ARROW-RIGHT
-    if(IsKeyPressed(KEY_RIGHT))
+    if (IsKeyPressed(KEY_RIGHT))
         moveCards(gameState, gameBoard, RIGHT);
+    if (IsKeyPressed(KEY_S))
+        saveGame(*(gameState), gameBoard);
 
     // Debug
     if (IsKeyPressed(KEY_F1))
@@ -54,7 +57,7 @@ void gameLogicAction(GameState *gameState, Card *gameBoard)
 void moveCardsUp(GameState *gameState, Card *gameBoard)
 {
     bool isValidMove = false;
-    // TODO: I'm baging me head against the keyboard for 3 hours and I couldn't implement this 
+    // TODO: I'm baging me head against the keyboard for 3 hours and I couldn't implement this
     if (isValidMove && boardAsEmptySlots(gameState))
         generateRandomCard(gameState, gameBoard);
 }
@@ -68,7 +71,6 @@ void moveCards(GameState *gameState, Card *gameBoard, int moveType)
         moveCardsUp(gameState, gameBoard);
         for (int i = 0, n = (BOARD_SIZE - moveType); i < n; i++)
             rotateBoardLeft(gameState);
-        
     }
     else
         moveCardsUp(gameState, gameBoard);
@@ -109,15 +111,16 @@ void rotateBoardLeft(GameState *gameState)
 // Only call this function when the currentBoardState is the same as initialBoardState
 void generateRandomCard(GameState *gameState, Card *gameBoard)
 {
-    int x = 0 + (rand() % ((BOARD_SIZE - 1) - 0 + 1));
-    int y = 0 + (rand() % ((BOARD_SIZE - 1) - 0 + 1));
+    int x; // = 0 + (rand() % ((BOARD_SIZE - 1) - 0 + 1));
+    int y; // = 0 + (rand() % ((BOARD_SIZE - 1) - 0 + 1));
 
-    while ((*(gameState->currentBoardState[0] + y * BOARD_SIZE + x) != NULL))
+    do
     {
         x = 0 + (rand() % ((BOARD_SIZE - 1) - 0 + 1));
         y = 0 + (rand() % ((BOARD_SIZE - 1) - 0 + 1));
-    }
-    int newCardEnum = (1 + (rand() % (10 - 1 + 1))) >= 9 ? C4 : C2;
+    } while ((*(gameState->currentBoardState[0] + y * BOARD_SIZE + x) != NULL));
+    
+    int newCardEnum = (1 + (rand() % (10 - 1 + 1))) > 9 ? C4 : C2;
     Card newCard = {getRectSpriteFromMatrix(newCardEnum, 3, 4, CARD_SIZE, CARD_SIZE), newCardEnum};
 
     // Trying to change the null value into newCard

@@ -1,3 +1,6 @@
+#ifndef _GameLogic
+#define _GameLogic
+
 #include "raylib.h"
 #include "assets.h"
 #include "UI.h"
@@ -57,3 +60,5 @@ void moveCardsUp(GameState *gameState, Card *gameBoard);
 void generateRandomCard(GameState *gameState, Card *gameboard);
 void rotateBoardLeft(GameState *gameState);
 bool boardAsEmptySlots(GameState *gameState);
+
+#endif

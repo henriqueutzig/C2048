@@ -1,26 +1,38 @@
 #include "includes/mainMenu.h"
 #include "includes/window.h"
 
-void drawMainMenu(MainMenu mainMenu)
+void drawMainMenu(MainMenu mainMenu, bool existsSave)
 {
     BeginDrawing();
 
     ClearBackground(BACKGROUND_COLOR);
 
-    drawButton(mainMenu.btLoadGame);
+    if (existsSave)
+    {
+        mainMenu.btNewGame = initButton(LoadTexture(BT_NEWGAME), 2, LoadSound(BT_SOUND),
+                                        (Vector2){155, 211});
+        drawButton(mainMenu.btLoadGame);
+    }
+    else
+    {
+        mainMenu.btNewGame = initButton(LoadTexture(BT_NEWGAME), 2, LoadSound(BT_SOUND),
+                                        (Vector2){247, 211});
+    }
     drawButton(mainMenu.btNewGame);
     drawButton(mainMenu.btHighScores);
     drawButton(mainMenu.btCredits);
     drawButton(mainMenu.btQuit);
 
     drawElementUI(mainMenu.logo);
-  
+
     EndDrawing();
 }
 
 void mainMenuBtAction(MainMenu *menuScreen, int *screenState)
 {
-    if (buttonState(&(menuScreen->btLoadGame)) || buttonState(&(menuScreen->btNewGame)))
+    if (buttonState(&(menuScreen->btLoadGame)))
+        *(screenState) = game;
+    if (buttonState(&(menuScreen->btNewGame)))
         *(screenState) = game;
     if (buttonState(&(menuScreen->btHighScores)))
         *(screenState) = highScore;
