@@ -56,9 +56,7 @@ bool saveNewRanker(Ranker *arrRankers, Ranker newRanker)
 int getHighScores(Ranker *arrRankers, char *str)
 {
     for (int i = 0; i < N_MAX_RANKERS; i++)
-    {
         sprintf((str + (i * MAX_HS_LENGTH)), "%s %i", (arrRankers + i)->name, (arrRankers + i)->score);
-        printf("%s\n", (str + (i * MAX_HS_LENGTH)));
-    }
+
     return 1;
 }
