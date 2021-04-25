@@ -12,8 +12,8 @@
 
 #define BOARD_SIZE 4
 #define CARD_SIZE 80
-#define REC_SRC_NULL (Rectangle){ 0, 0, CARD_SIZE, CARD_SIZE }
-#define CARD_VOID (Card) {REC_SRC_NULL, 0 }
+#define REC_SRC_NULL (Rectangle) { 0, 0, CARD_SIZE, CARD_SIZE }
+#define CARD_VOID (Card) { REC_SRC_NULL, 0 }
 
 #define FILES_PATH "src/files/saves/"
 #define SGAME_PATH FILES_PATH "game.bin"
@@ -39,7 +39,7 @@ enum move
     UP = 0,
     RIGHT,
     DOWN,
-    LEFT,    
+    LEFT,
 };
 
 typedef struct Card
@@ -65,14 +65,13 @@ typedef struct SavedGame
 } SavedGame;
 
 GameState initGameState(Card *currentBoardState, Texture2D cardTexture, int movements, int score);
-void gameLogicAction(GameState *gameState, Card *gameBoard, SavedGame *saveData);
 void moveCards(GameState *gameState, Card *gameBoard, int moveType);
 void moveCardsUp(GameState *gameState, Card *gameBoard);
 void generateRandomCard(GameState *gameState, Card *gameboard);
 void rotateBoardLeft(GameState *gameState);
 bool boardAsEmptySlots(GameState *gameState);
-
-SavedGame loadGame();
-bool saveGame(GameState gameState, Card *boardState, SavedGame *saveData);
+void restartGame(Card *gameBoard, GameState *gameState);
+GameState loadGame(char path[512], Card *initialBoardState);
+bool saveGame(GameState gameState, Card *boardState, char path[512]);
 
 #endif

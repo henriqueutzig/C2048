@@ -1,3 +1,5 @@
+#define RAYGUI_IMPLEMENTATION
+#define GUI_FILE_DIALOG_IMPLEMENTATION
 #include "includes/globals.h"
 #include "includes/mainMenu.h"
 #include "includes/gameScene.h"
@@ -10,9 +12,8 @@ int main(void)
     Window window = {WINDOW_DW, WINDOW_DH, mainMenu, "C2048", true};
     InitWindow(window.width, window.height, window.name);
     InitAudioDevice();
-
-    // SaveManager init
-    SavedGame saveData = loadGame();
+    SetExitKey(KEY_F4);
+    GuiLoadStyle(DRACULA_STYLE);
 
     //GameState init
     Card initialBoardState[BOARD_SIZE][BOARD_SIZE] = {CARD_VOID};
@@ -30,19 +31,18 @@ int main(void)
 
     SetTargetFPS(60);
     // Main Scene loop
-    while (!WindowShouldClose()) // Detect window close button or ESC key
+    while (!WindowShouldClose()) // Detect window close button or F4 key
     {
         switch (window.screenState)
         {
         case mainMenu:
             // TODO: make new game button not use the saveData board
-            mainMenuBtAction(&menuScreen, &(window.screenState), &initialBoardState[0][0], saveData, &gameState);
-            drawMainMenu(menuScreen, saveData.exists);
+            mainMenuBtAction(&menuScreen, &(window.screenState), &initialBoardState[0][0], &gameState);
+            drawMainMenu(&menuScreen);
             break;
         case game:
-            gameLogicAction(&gameState, &initialBoardState[0][0], &saveData);
-            gameSceneAction(&gameScreen, &(window.screenState), &gameState);
-            drawGameScene(gameScreen, gameState);
+            gameSceneAction(&gameScreen, &(window.screenState), &gameState, &initialBoardState[0][0]);
+            drawGameScene(&gameScreen, gameState);
             break;
         case highScore:
             BeginDrawing();

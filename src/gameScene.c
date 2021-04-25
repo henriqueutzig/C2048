@@ -65,35 +65,119 @@ void drawBoardCards(GameState gameState, ElementUI board)
     }
 }
 
-void drawGameScene(GameScene gameScene, GameState gameState)
+void drawGameScene(GameScene *gameScene, GameState gameState)
 {
     BeginDrawing();
 
     ClearBackground(BACKGROUND_COLOR);
 
-    DrawTexture(gameScene.board.texture, gameScene.board.pos.x, gameScene.board.pos.y, WHITE);
+    if (gameScene->newGameDialog.isActive)
+    {
+        gameScene->newGameDialog.buttonPressed = GuiMessageBox((Rectangle){WINDOW_DW / 2 - 100, WINDOW_DH / 2 - 50, 200, 100}, "New Game", "Wish to start a new game ?", "YES;NO");
+    }
+    else if (gameScene->quitGameDialog.isActive)
+    {
+        gameScene->quitGameDialog.buttonPressed = GuiMessageBox((Rectangle){WINDOW_DW / 2 - 100, WINDOW_DH / 2 - 50, 200, 100}, "Quit", "Wish to quit the game ?", "YES;NO");
+    }
+    else if (gameScene->saveGameDialog.isActive)
+    {
+        gameScene->saveGameDialog.buttonPressed = GuiTextInputBox((Rectangle){WINDOW_DW / 2 - 100, WINDOW_DH / 2 - 50, 200, 125}, "Save file", "Insert the name of the save", "SAVE;CANCEL", gameScene->saveFileName);
+    }
+    else
+    {
+        DrawTexture(gameScene->board.texture, gameScene->board.pos.x, gameScene->board.pos.y, WHITE);
 
-    drawBoardCards(gameState, gameScene.board);
+        drawBoardCards(gameState, gameScene->board);
 
-    drawScoreBlock(gameScene.scoreBlock, gameState.score);
-    drawMovementBlock(gameScene.movementBlock, gameState.movements);
-    drawRankingBlock(gameScene.rankingBlock, gameScene.medal, testNames, 4);
+        drawScoreBlock(gameScene->scoreBlock, gameState.score);
+        drawMovementBlock(gameScene->movementBlock, gameState.movements);
+        drawRankingBlock(gameScene->rankingBlock, gameScene->medal, testNames, 4);
 
-    drawElementUI(gameScene.quitKey);
-    drawElementUI(gameScene.newGameKey);
-    drawElementUI(gameScene.saveKey);
-    drawElementUI(gameScene.movementsKey);
+        drawElementUI(gameScene->quitKey);
+        drawElementUI(gameScene->newGameKey);
+        drawElementUI(gameScene->saveKey);
+        drawElementUI(gameScene->movementsKey);
 
-    drawButton(gameScene.btBackToMenu);
+        drawButton(gameScene->btBackToMenu);
+    }
 
     EndDrawing();
 }
 
-void gameSceneAction(GameScene *gameScene, int *screenState, GameState *gameState)
+void gameSceneAction(GameScene *gameScene, int *screenState, GameState *gameState, Card *gameBoard)
 {
     // Acoes de tecla aqui
+    if (gameScene->saveGameDialog.isActive || gameScene->newGameDialog.isActive || gameScene->quitGameDialog.isActive)
+    {
+        if (gameScene->newGameDialog.buttonPressed == -1 || gameScene->saveGameDialog.buttonPressed == -1 || gameScene->quitGameDialog.buttonPressed == -1)
+        {
+            return;
+        }
+        if (gameScene->saveGameDialog.buttonPressed == YES)
+        {
+            gameScene->saveGameDialog.buttonPressed = NO;
+            gameScene->saveGameDialog.isActive = false;
+            saveGame(*gameState, gameBoard, TextFormat("%s/%s%s", FILES_PATH, gameScene->saveFileName, ".bin"));
+        }
+        else if (gameScene->newGameDialog.buttonPressed == YES)
+        {
+            gameScene->newGameDialog.buttonPressed = NO;
+            gameScene->newGameDialog.isActive = false;
+            restartGame(gameBoard, gameState);
+        }
+        else if (gameScene->quitGameDialog.buttonPressed == YES)
+        {
+            gameScene->quitGameDialog.buttonPressed = NO;
+            gameScene->quitGameDialog.isActive = false;
+            *screenState = mainMenu;
+        }
+        else
+        {
+            gameScene->saveGameDialog.isActive = false;
+            gameScene->newGameDialog.isActive = false;
+            gameScene->quitGameDialog.isActive = false;
+        }
+        return;
+    }
+
     if (buttonState(&(gameScene->btBackToMenu)))
         *screenState = mainMenu;
+    if (IsKeyPressed(KEY_UP))
+        moveCards(gameState, gameBoard, UP);
+    // ARROW-DOWN
+    if (IsKeyPressed(KEY_DOWN))
+        moveCards(gameState, gameBoard, DOWN);
+    // ARROW-LEFT
+    if (IsKeyPressed(KEY_LEFT))
+        moveCards(gameState, gameBoard, LEFT);
+    // ARROW-RIGHT
+    if (IsKeyPressed(KEY_RIGHT))
+        moveCards(gameState, gameBoard, RIGHT);
+    if (IsKeyPressed(KEY_S))
+        gameScene->saveGameDialog.isActive = true;
+    if (IsKeyPressed(KEY_N))
+        gameScene->newGameDialog.isActive = true;
+    if (IsKeyPressed(KEY_ESCAPE))
+        gameScene->quitGameDialog.isActive = true;
+
+    // Debug
+    if (IsKeyPressed(KEY_F1))
+    {
+        // for(int i = 0; i < 4 ; i++)
+        rotateBoardLeft(gameState);
+    }
+    if (IsKeyPressed(KEY_F2))
+    {
+        if (boardAsEmptySlots(gameState))
+            generateRandomCard(gameState, gameBoard);
+    }
+    if (IsKeyPressed(KEY_F3))
+    {
+        if (boardAsEmptySlots(gameState))
+            printf("\nEmpty\n");
+        else
+            printf("\nNOT Empty\n");
+    }
 }
 
 GameScene initGameScene()
@@ -113,7 +197,21 @@ GameScene initGameScene()
 
     window.btBackToMenu = initButton(LoadTexture(BT_BACK), 1, LoadSound(BT_SOUND), (Vector2){20, 10});
 
+    window.newGameDialog = initDialogState();
+    window.saveGameDialog = initDialogState();
+    window.quitGameDialog = initDialogState();
+
+    window.saveFileName[0] = '\0';
+
     return window;
+}
+
+DialogState initDialogState()
+{
+    DialogState dialogState;
+    dialogState.buttonPressed = 0;
+    dialogState.isActive = false;
+    return dialogState;
 }
 
 void deInitGameScene(GameScene *gameScene)

@@ -1,50 +1,58 @@
 #include "includes/mainMenu.h"
 #include "includes/window.h"
 
-void drawMainMenu(MainMenu mainMenu, bool existsSave)
+void drawMainMenu(MainMenu *mainMenu)
 {
     BeginDrawing();
 
     ClearBackground(BACKGROUND_COLOR);
 
-    if (existsSave)
+    if (mainMenu->fileDialogState.fileDialogActive)
     {
-        drawButton(mainMenu.btLoadGame);
-        mainMenu.btNewGame.bounds.x = 155;
+        GuiFileDialog(&mainMenu->fileDialogState);
     }
     else
     {
-        mainMenu.btNewGame.bounds.x = 247;
-    }
-    drawButton(mainMenu.btNewGame);
-    drawButton(mainMenu.btHighScores);
-    drawButton(mainMenu.btCredits);
-    drawButton(mainMenu.btQuit);
+        drawButton(mainMenu->btNewGame);
+        drawButton(mainMenu->btLoadGame);
+        drawButton(mainMenu->btHighScores);
+        drawButton(mainMenu->btCredits);
+        drawButton(mainMenu->btQuit);
 
-    drawElementUI(mainMenu.logo);
+        drawElementUI(mainMenu->logo);
+    }
 
     EndDrawing();
 }
 
-void mainMenuBtAction(MainMenu *menuScreen, int *screenState, Card *initialBoardState, SavedGame saveData, GameState *gameState)
+void mainMenuBtAction(MainMenu *menuScreen, int *screenState, Card *initialBoardState, GameState *gameState)
 {
+    if (menuScreen->fileDialogState.SelectFilePressed)
+    {
+        // Load image file (if supported extension)
+        if (IsFileExtension(menuScreen->fileDialogState.fileNameText, ".bin"))
+        {
+            *gameState = loadGame(TextFormat("%s/%s", menuScreen->fileDialogState.dirPathText, menuScreen->fileDialogState.fileNameText), initialBoardState);
+            *(screenState) = game;
+        }
+
+        menuScreen->fileDialogState.SelectFilePressed = false;
+        menuScreen->fileDialogState.fileDialogActive = false;
+    }
+
+    if (menuScreen->fileDialogState.fileDialogActive == true)
+    {
+        return;
+    }
+
     if (buttonState(&(menuScreen->btLoadGame)))
     {
-        for (int r = 0; r < BOARD_SIZE; r++)
-            for (int c = 0; c < BOARD_SIZE; c++)
-                *(initialBoardState + r * BOARD_SIZE + c) = saveData.boardState[r][c];
-        *gameState = initGameState(initialBoardState, LoadTexture(CARDS), 0, 0);
-        *(screenState) = game;
+        menuScreen->fileDialogState.fileDialogActive = true;
     }
 
     if (buttonState(&(menuScreen->btNewGame)))
     {
-        for (int r = 0; r < BOARD_SIZE; r++)
-            for (int c = 0; c < BOARD_SIZE; c++)
-                *(initialBoardState + r * BOARD_SIZE + c) = CARD_VOID;
-        *gameState = initGameState(initialBoardState, LoadTexture(CARDS), 0, 0);
-        for (int i = 0; i < 2; i++)
-            generateRandomCard(gameState, initialBoardState);
+        restartGame(initialBoardState, gameState);
         *(screenState) = game;
     }
 
@@ -59,6 +67,8 @@ void mainMenuBtAction(MainMenu *menuScreen, int *screenState, Card *initialBoard
 MainMenu initMainMenu()
 {
     MainMenu window;
+
+    window.fileDialogState = InitGuiFileDialog(420, 310, FILES_PATH, false);
 
     window.logo = initElementUI(LoadTexture(GAME_LOGO), (Vector2){155, 62});
 

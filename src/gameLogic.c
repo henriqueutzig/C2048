@@ -16,43 +16,6 @@ GameState initGameState(Card *currentBoardState, Texture2D cardTexture, int move
     return gameState;
 }
 
-void gameLogicAction(GameState *gameState, Card *gameBoard, SavedGame *saveData)
-{
-    // ARROW-UP
-    if (IsKeyPressed(KEY_UP))
-        moveCards(gameState, gameBoard, UP);
-    // ARROW-DOWN
-    if (IsKeyPressed(KEY_DOWN))
-        moveCards(gameState, gameBoard, DOWN);
-    // ARROW-LEFT
-    if (IsKeyPressed(KEY_LEFT))
-        moveCards(gameState, gameBoard, LEFT);
-    // ARROW-RIGHT
-    if (IsKeyPressed(KEY_RIGHT))
-        moveCards(gameState, gameBoard, RIGHT);
-    if (IsKeyPressed(KEY_S))
-        saveGame(*(gameState), gameBoard, saveData);
-
-    // Debug
-    if (IsKeyPressed(KEY_F1))
-    {
-        // for(int i = 0; i < 4 ; i++)
-        rotateBoardLeft(gameState);
-    }
-    if (IsKeyPressed(KEY_F2))
-    {
-        if (boardAsEmptySlots(gameState))
-            generateRandomCard(gameState, gameBoard);
-    }
-    if (IsKeyPressed(KEY_F3))
-    {
-        if (boardAsEmptySlots(gameState))
-            printf("\nEmpty\n");
-        else
-            printf("\nNOT Empty\n");
-    }
-}
-
 void moveCardsUp(GameState *gameState, Card *gameBoard)
 {
     bool isValidMove = false;
@@ -127,12 +90,22 @@ void generateRandomCard(GameState *gameState, Card *gameBoard)
     *(gameState->currentBoardState[0] + y * BOARD_SIZE + x) = (gameBoard + y * BOARD_SIZE + x);
 }
 
-SavedGame loadGame()
+void restartGame(Card *gameBoard, GameState *gameState)
 {
-    FILE *saveFile = fopen(SGAME_PATH, "rb+");
+    for (int r = 0; r < BOARD_SIZE; r++)
+        for (int c = 0; c < BOARD_SIZE; c++)
+            *(gameBoard + r * BOARD_SIZE + c) = CARD_VOID;
+    *gameState = initGameState(gameBoard, LoadTexture(CARDS), 0, 0);
+    for (int i = 0; i < 2; i++)
+        generateRandomCard(gameState, gameBoard);
+}
+
+GameState loadGame(char path[512], Card *initialBoardState)
+{
+    FILE *saveFile = fopen(path, "rb+");
     if (saveFile == NULL)
     {
-        return (SavedGame){false, {}, {}};
+        return initGameState(initialBoardState, LoadTexture(CARDS), 0, 0);
     }
 
     SavedGame data;
@@ -142,25 +115,31 @@ SavedGame loadGame()
 
     data.exists = true;
 
-    return data;
+    for (int r = 0; r < BOARD_SIZE; r++)
+        for (int c = 0; c < BOARD_SIZE; c++)
+            *(initialBoardState + r * BOARD_SIZE + c) = data.boardState[r][c];
+
+    return initGameState(initialBoardState, LoadTexture(CARDS), 0, 0);
 }
 
-bool saveGame(GameState gameState, Card *boardState, SavedGame *saveData)
+bool saveGame(GameState gameState, Card *boardState, char path[512])
 {
-    FILE *saveFile = fopen(SGAME_PATH, "wb+");
+    FILE *saveFile = fopen(path, "wb+");
+    SavedGame data;
+
     if (saveFile == NULL)
     {
         fprintf(stderr, "\nErro ao abrir o arquivo\n");
         return false;
     }
 
-    saveData->exists = true;
-    saveData->gameState = gameState;
+    data.exists = true;
+    data.gameState = gameState;
     for (int r = 0; r < BOARD_SIZE; r++)
         for (int c = 0; c < BOARD_SIZE; c++)
-            saveData->boardState[r][c] = *(boardState + r * BOARD_SIZE + c);
+            data.boardState[r][c] = *(boardState + r * BOARD_SIZE + c);
 
-    fwrite(saveData, sizeof(SavedGame), 1, saveFile);
+    fwrite(&data, sizeof(SavedGame), 1, saveFile);
     fflush(saveFile);
     fclose(saveFile);
 
