@@ -29,9 +29,13 @@ int main(void)
     // CreditsScene screen init
     CreditsScene creditsScreen = initCreditsScene();
 
-    // Ranking init 
+    // Ranking init
     Ranker rankers[10];
     loadRankers(&rankers[0]);
+
+    // Converts Ranker[] to char[][]
+    char highScores[N_MAX_RANKERS][MAX_HS_LENGTH];
+    getHighScores(&rankers[0], &highScores[0][0]);    
 
     SetTargetFPS(60);
     // Main Scene loop
@@ -47,7 +51,7 @@ int main(void)
         case game:
             gameLogicAction(&gameState, &initialBoardState[0][0], &saveData);
             gameSceneAction(&gameScreen, &(window.screenState), &gameState);
-            drawGameScene(gameScreen, gameState);
+            drawGameScene(gameScreen, gameState, highScores, N_MAX_RANKERS);
             break;
         case highScore:
             BeginDrawing();

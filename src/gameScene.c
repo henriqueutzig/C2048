@@ -1,12 +1,6 @@
 #include "includes/gameScene.h"
 #include "includes/window.h"
 
-//Test
-char testNames[4][MAX_STRING_SIZE] =
-    {"Test1",
-     "Test2",
-     "Test3",
-     "Test4"};
 
 void drawMovementBlock(ElementUI movementBlockUI, int movement)
 {
@@ -28,20 +22,20 @@ void drawRankingBlock(ElementUI rankingBlockUI, ElementUI medal, char names[][MA
     for (int i = 0; i < size; i++)
     {
         int posX = rankingBlockUI.pos.x + 10;
-        int posY = rankingBlockUI.pos.y + (i * 22) + 32;
+        int posY = rankingBlockUI.pos.y + (i * 18) + 32;
         switch (i)
         {
         case 0:
             DrawText(TextFormat("%s", names[i]), posX, posY, rankingBlockUI.fontSize, DRACULA_YELLOW);
-            DrawTextureRec(medal.texture, getRectSpriteFromArray(GOLD_MEDAL, MEDAL_SIZE_W, MEDAL_SIZE_H), (Vector2){posX + 100, posY + 3}, WHITE);
+            DrawTextureRec(medal.texture, getRectSpriteFromArray(GOLD_MEDAL, MEDAL_SIZE_W, MEDAL_SIZE_H), (Vector2){posX + 150, posY + 3}, WHITE);
             break;
         case 1:
             DrawText(TextFormat("%s", names[i]), posX, posY, rankingBlockUI.fontSize, rankingBlockUI.color);
-            DrawTextureRec(medal.texture, getRectSpriteFromArray(SILVER_MEDAL, MEDAL_SIZE_W, MEDAL_SIZE_H), (Vector2){posX + 100, posY + 3}, WHITE);
+            DrawTextureRec(medal.texture, getRectSpriteFromArray(SILVER_MEDAL, MEDAL_SIZE_W, MEDAL_SIZE_H), (Vector2){posX + 150, posY + 3}, WHITE);
             break;
         case 2:
             DrawText(TextFormat("%s", names[i]), posX, posY, rankingBlockUI.fontSize, rankingBlockUI.color);
-            DrawTextureRec(medal.texture, getRectSpriteFromArray(BRONZE_MEDAL, MEDAL_SIZE_W, MEDAL_SIZE_H), (Vector2){posX + 100, posY + 3}, WHITE);
+            DrawTextureRec(medal.texture, getRectSpriteFromArray(BRONZE_MEDAL, MEDAL_SIZE_W, MEDAL_SIZE_H), (Vector2){posX + 150, posY + 3}, WHITE);
             break;
         default:
             DrawText(TextFormat("%s", names[i]), posX, posY, rankingBlockUI.fontSize, rankingBlockUI.color);
@@ -65,7 +59,7 @@ void drawBoardCards(GameState gameState, ElementUI board)
     }
 }
 
-void drawGameScene(GameScene gameScene, GameState gameState)
+void drawGameScene(GameScene gameScene, GameState gameState, char highScores[][MAX_STRING_SIZE], int nHS)
 {
     BeginDrawing();
 
@@ -77,7 +71,8 @@ void drawGameScene(GameScene gameScene, GameState gameState)
 
     drawScoreBlock(gameScene.scoreBlock, gameState.score);
     drawMovementBlock(gameScene.movementBlock, gameState.movements);
-    drawRankingBlock(gameScene.rankingBlock, gameScene.medal, testNames, 4);
+
+    drawRankingBlock(gameScene.rankingBlock, gameScene.medal, highScores, nHS);
 
     drawElementUI(gameScene.quitKey);
     drawElementUI(gameScene.newGameKey);
@@ -102,7 +97,7 @@ GameScene initGameScene()
     window.board = initElementUI(LoadTexture(BOARD_BG), (Vector2){18, 40});
     window.movementBlock = initElementTextUI(LoadTexture(MOVEMENT_BLOCK), (Vector2){436, 40}, WHITE, 20);
     window.scoreBlock = initElementTextUI(LoadTexture(SCORE_BLOCK), (Vector2){555, 40}, WHITE, 20);
-    window.rankingBlock = initElementTextUI(LoadTexture(RANKING_BLOCK), (Vector2){436, 109}, WHITE, 20);
+    window.rankingBlock = initElementTextUI(LoadTexture(RANKING_BLOCK), (Vector2){436, 109}, WHITE, 18);
 
     window.quitKey = initElementUI(LoadTexture(QUIT_KEY), (Vector2){436, 343});
     window.newGameKey = initElementUI(LoadTexture(NEW_GAME_KEY), (Vector2){436, 379});
