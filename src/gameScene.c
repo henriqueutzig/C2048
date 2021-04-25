@@ -106,7 +106,6 @@ void drawGameScene(GameScene *gameScene, GameState gameState)
 
 void gameSceneAction(GameScene *gameScene, int *screenState, GameState *gameState, Card *gameBoard)
 {
-    // Acoes de tecla aqui
     if (gameScene->saveGameDialog.isActive || gameScene->newGameDialog.isActive || gameScene->quitGameDialog.isActive)
     {
         if (gameScene->newGameDialog.buttonPressed == -1 || gameScene->saveGameDialog.buttonPressed == -1 || gameScene->quitGameDialog.buttonPressed == -1)
@@ -142,41 +141,27 @@ void gameSceneAction(GameScene *gameScene, int *screenState, GameState *gameStat
 
     if (buttonState(&(gameScene->btBackToMenu)))
         *screenState = mainMenu;
-    if (IsKeyPressed(KEY_UP))
-        moveCards(gameState, gameBoard, UP);
-    // ARROW-DOWN
-    if (IsKeyPressed(KEY_DOWN))
-        moveCards(gameState, gameBoard, DOWN);
-    // ARROW-LEFT
-    if (IsKeyPressed(KEY_LEFT))
-        moveCards(gameState, gameBoard, LEFT);
-    // ARROW-RIGHT
-    if (IsKeyPressed(KEY_RIGHT))
-        moveCards(gameState, gameBoard, RIGHT);
-    if (IsKeyPressed(KEY_S))
-        gameScene->saveGameDialog.isActive = true;
-    if (IsKeyPressed(KEY_N))
-        gameScene->newGameDialog.isActive = true;
-    if (IsKeyPressed(KEY_ESCAPE))
-        gameScene->quitGameDialog.isActive = true;
 
-    // Debug
-    if (IsKeyPressed(KEY_F1))
+    int keyPressed = GetKeyPressed();
+
+    switch (keyPressed)
     {
-        // for(int i = 0; i < 4 ; i++)
-        rotateBoardLeft(gameState);
-    }
-    if (IsKeyPressed(KEY_F2))
-    {
-        if (boardAsEmptySlots(gameState))
-            generateRandomCard(gameState, gameBoard);
-    }
-    if (IsKeyPressed(KEY_F3))
-    {
-        if (boardAsEmptySlots(gameState))
-            printf("\nEmpty\n");
-        else
-            printf("\nNOT Empty\n");
+    case KEY_UP:
+    case KEY_DOWN:
+    case KEY_LEFT:
+    case KEY_RIGHT:
+        moveCards(gameState, gameBoard, keyToMove(keyPressed));
+        break;
+
+    case KEY_S:
+        gameScene->saveGameDialog.isActive = true;
+        break;
+    case KEY_N:
+        gameScene->newGameDialog.isActive = true;
+        break;
+    case KEY_ESCAPE:
+        gameScene->quitGameDialog.isActive = true;
+        break;
     }
 }
 

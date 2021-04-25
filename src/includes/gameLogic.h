@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 
 #define BOARD_SIZE 4
 #define CARD_SIZE 80
@@ -36,7 +37,7 @@ enum CardValue
 
 enum move
 {
-    UP = 0,
+    UP,
     RIGHT,
     DOWN,
     LEFT,
@@ -65,13 +66,15 @@ typedef struct SavedGame
 } SavedGame;
 
 GameState initGameState(Card *currentBoardState, Texture2D cardTexture, int movements, int score);
-void moveCards(GameState *gameState, Card *gameBoard, int moveType);
-void moveCardsUp(GameState *gameState, Card *gameBoard);
+bool moveCards(GameState *gameState, Card *gameBoard, int moveType);
+bool moveCardsUp(Card *gameBoard, int *score);
+int keyToMove(int key);
 void generateRandomCard(GameState *gameState, Card *gameboard);
-void rotateBoardLeft(GameState *gameState);
-bool boardAsEmptySlots(GameState *gameState);
+void rotateBoardLeft(Card *gameBoard);
+bool boardHasEmptySlots(GameState *gameState);
 void restartGame(Card *gameBoard, GameState *gameState);
 GameState loadGame(char path[512], Card *initialBoardState);
 bool saveGame(GameState gameState, Card *boardState, char path[512]);
+void copyMatrix(Card *dest, Card *src);
 
 #endif
