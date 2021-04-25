@@ -16,7 +16,7 @@ bool loadRankers(Ranker *rankers)
         do
         {
             aux = fgetc(file);
-            if (isalpha(aux))
+            if (aux != ' ' && aux != '\n')
             {
                 (rankers + i)->name[n] = aux;
                 n++;
@@ -33,6 +33,10 @@ bool loadRankers(Ranker *rankers)
     return true;
 }
 
+// TODO: 
+//      [] check if newRanker.score > last ranker's score
+//      [] insert newRanker than sort
+//      [] write to .txt file
 bool saveNewRanker(Ranker *arrRankers, Ranker newRanker)
 {
     // bool rewriteHighscores = false;
