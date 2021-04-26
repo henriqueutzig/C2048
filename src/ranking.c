@@ -33,28 +33,50 @@ bool loadRankers(Ranker *rankers)
     return true;
 }
 
-// TODO: 
-//      [] check if newRanker.score > last ranker's score
-//      [] insert newRanker than sort
-//      [] write to .txt file
-bool saveNewRanker(Ranker *arrRankers, Ranker newRanker)
+bool saveNewRanker(Ranker *arrRankers, Ranker newRanker, char *str)
 {
-    // bool rewriteHighscores = false;
-    // Ranker aux, _aux;
-    // for (int i = 0; i < N_MAX_RANKERS; i++)
-    // {
-    //     // if((newRanker.score > (arrRankers+i)->score) && rewriteHighscores == false)
-    //     // {
-    //     //     aux = *(arrRankers+i);
-    //     //     *(arrRankers+i) = newRanker;
-    //     //     rewriteHighscores = true;
-    //     // }
-    //     // else if(rewriteHighscores)
-    //     // {
-    //     //     _aux = *(arrRankers+i);
-    //     //     *(arrRankers+i) = aux;
-    //     // }
-    // }
+    bool rewriteHighScores = false;
+    printf("%s %i\t%s %i", newRanker.name, newRanker.score, (arrRankers + N_MAX_RANKERS)->name, (arrRankers + N_MAX_RANKERS)->score);
+    if (newRanker.score > (arrRankers + N_MAX_RANKERS)->score)
+    {
+        *(arrRankers + N_MAX_RANKERS) = newRanker;
+        sortRankers(arrRankers);
+        updateHighScoresFile(arrRankers);
+        getHighScores(arrRankers, str);
+    }
+
+    return rewriteHighScores;
+}
+
+void sortRankers(Ranker *arrRankers)
+{
+    int n = N_MAX_RANKERS;
+    while (((arrRankers + n)->score > (arrRankers + n - 1)->score) && (n > 0))
+    {
+        Ranker aux = *(arrRankers + n - 1);
+        *(arrRankers + n - 1) = *(arrRankers + n);
+        *(arrRankers + n) = aux;
+        n--;
+    }
+}
+
+int updateHighScoresFile(Ranker *arrRankers)
+{
+    FILE *file = fopen(SHIGHSCORE_PATH, "w");
+    if (file == NULL)
+    {
+        fprintf(stderr, "\nErro ao abrir o arquivo\n");
+        return false;
+    }
+
+    for (int i = 0; i < N_MAX_RANKERS; i++)
+    {
+        fprintf(file, "%s %i", (arrRankers + i)->name, (arrRankers + i)->score);
+        if (i < (N_MAX_RANKERS - 1))
+            fputc('\n', file);
+    }
+    fflush(file);
+    return fclose(file);
 }
 
 int getHighScores(Ranker *arrRankers, char *str)

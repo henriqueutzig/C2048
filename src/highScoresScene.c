@@ -32,6 +32,8 @@ void drawHighScoresScene(HighScoresScene highScoresScene, char highScores[][LEN_
     drawButton(highScoresScene.btMainMenu);
     drawRankingBlock(highScoresScene.rankingBlock, highScoresScene.medal, highScores, N_RANKERS, HS_NAME_SPACING, HS_MEDAL_OFFSET, HS_NAME_OFFSET);
 
+    DrawText(TITLE_TXT, 195, 30, 35, DRACULA_YELLOW);
+
     EndDrawing();
 }
 

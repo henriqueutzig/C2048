@@ -6,6 +6,8 @@
 #include "UI.h"
 #include <string.h>
 
+#define TITLE_TXT "LEADERBOARD:"
+
 #define N_RANKERS 10
 #define LEN_RANKER 31
 

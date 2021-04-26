@@ -22,7 +22,9 @@ typedef struct Ranker
 } Ranker;
 
 bool loadRankers(Ranker *rankers);
-bool saveNewRanker(Ranker *arrRankers , Ranker newRanker);
+bool saveNewRanker(Ranker *arrRankers , Ranker newRanker, char *str);
+void sortRankers(Ranker *arrRankers);
+int updateHighScoresFile(Ranker *arrRankers);
 int getHighScores(Ranker *arrRankers, char *str);
 
 #endif

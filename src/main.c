@@ -36,9 +36,9 @@ int main(void)
 
     // Converts Ranker[] to char[][]
     char highScores[N_MAX_RANKERS][MAX_HS_LENGTH];
-    getHighScores(&rankers[0], &highScores[0][0]);    
+    getHighScores(&rankers[0], &highScores[0][0]);
 
-    // HighScoresScene init 
+    // HighScoresScene init
     HighScoresScene highScoresScene = initHighScores();
 
     SetTargetFPS(60);
@@ -48,7 +48,6 @@ int main(void)
         switch (window.screenState)
         {
         case mainMenu:
-            // TODO: make new game button not use the saveData board
             mainMenuBtAction(&menuScreen, &(window.screenState), &initialBoardState[0][0], saveData, &gameState);
             drawMainMenu(menuScreen, saveData.exists);
             break;
