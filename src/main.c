@@ -4,6 +4,8 @@
 #include "includes/mainMenu.h"
 #include "includes/gameScene.h"
 #include "includes/creditsScene.h"
+#include "includes/ranking.h"
+#include "includes/highScoresScene.h"
 
 int main(void)
 {
@@ -29,6 +31,17 @@ int main(void)
     // CreditsScene screen init
     CreditsScene creditsScreen = initCreditsScene();
 
+    // Ranking init
+    Ranker rankers[10];
+    loadRankers(&rankers[0]);
+
+    // Converts Ranker[] to char[][]
+    char highScores[N_MAX_RANKERS][MAX_HS_LENGTH];
+    getHighScores(&rankers[0], &highScores[0][0]);
+
+    // HighScoresScene init
+    HighScoresScene highScoresScene = initHighScores();
+
     SetTargetFPS(60);
     // Main Scene loop
     while (!WindowShouldClose()) // Detect window close button or F4 key
@@ -36,22 +49,16 @@ int main(void)
         switch (window.screenState)
         {
         case mainMenu:
-            // TODO: make new game button not use the saveData board
             mainMenuBtAction(&menuScreen, &(window.screenState), &initialBoardState[0][0], &gameState);
             drawMainMenu(&menuScreen);
             break;
         case game:
             gameSceneAction(&gameScreen, &(window.screenState), &gameState, &initialBoardState[0][0]);
-            drawGameScene(&gameScreen, gameState);
+            drawGameScene(&gameScreen, gameState, highScores, N_MAX_RANKERS);
             break;
         case highScore:
-            BeginDrawing();
-
-            ClearBackground(RAYWHITE);
-
-            DrawText("HighScoreWindow", 190, 200, 20, LIGHTGRAY);
-
-            EndDrawing();
+            highScoresSceneAction(&highScoresScene, &(window.screenState));
+            drawHighScoresScene(highScoresScene, highScores);
             break;
         case credits:
             creditsSceneAction(&creditsScreen, &(window.screenState));
@@ -61,6 +68,7 @@ int main(void)
             deInitMainMenu(&menuScreen);
             deInitGameScene(&gameScreen);
             deInitCreditsScene(&creditsScreen);
+            deInitHighScores(&highScoresScene);
             CloseAudioDevice();
             CloseWindow();
             return 0;
@@ -74,6 +82,7 @@ int main(void)
     deInitMainMenu(&menuScreen);
     deInitGameScene(&gameScreen);
     deInitCreditsScene(&creditsScreen);
+    deInitHighScores(&highScoresScene);
     // Close window and OpenGL context
     CloseAudioDevice();
     CloseWindow();

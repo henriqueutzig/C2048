@@ -16,9 +16,8 @@
 #define REC_SRC_NULL (Rectangle) { 0, 0, CARD_SIZE, CARD_SIZE }
 #define CARD_VOID (Card) { REC_SRC_NULL, 0 }
 
-#define FILES_PATH "src/files/saves/"
+#define FILES_PATH 
 #define SGAME_PATH FILES_PATH "game.bin"
-#define SHIGHSCORE_PATH "highscore.txt"
 
 enum CardValue
 {
