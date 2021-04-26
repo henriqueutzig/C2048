@@ -75,25 +75,21 @@ bool moveCards(GameState *gameState, Card *gameBoard, int moveType)
         return false;
 
     bool isValidMove = false;
-    Card tmpGameBoard[BOARD_SIZE][BOARD_SIZE] = {CARD_VOID};
-
-    copyMatrix(&tmpGameBoard[0][0], gameBoard);
 
     if (moveType > 0)
     {
         for (int i = 0; i < moveType; i++)
-            rotateBoardLeft(&tmpGameBoard[0][0]);
-        isValidMove = moveCardsUp(&tmpGameBoard[0][0], &gameState->score);
+            rotateBoardLeft(gameBoard);
+        isValidMove = moveCardsUp(gameBoard, &gameState->score);
         for (int i = 0, n = (4 - moveType); i < n; i++)
-            rotateBoardLeft(&tmpGameBoard[0][0]);
+            rotateBoardLeft(gameBoard);
     }
     else
-        isValidMove = moveCardsUp(&tmpGameBoard[0][0], &gameState->score);
+        isValidMove = moveCardsUp(gameBoard, &gameState->score);
 
     if (isValidMove)
     {
         gameState->movements++;
-        copyMatrix(gameBoard, &tmpGameBoard[0][0]);
         *gameState = initGameState(gameBoard, gameState->cardTexture, gameState->movements, gameState->score);
         generateRandomCard(gameState, gameBoard);
     }
@@ -205,9 +201,8 @@ bool saveGame(GameState gameState, Card *boardState, char path[512])
 
     data.exists = true;
     data.gameState = gameState;
-    for (int r = 0; r < BOARD_SIZE; r++)
-        for (int c = 0; c < BOARD_SIZE; c++)
-            data.boardState[r][c] = *(boardState + r * BOARD_SIZE + c);
+
+    copyMatrix(&data.boardState[0][0], boardState);
 
     fwrite(&data, sizeof(SavedGame), 1, saveFile);
     fflush(saveFile);
