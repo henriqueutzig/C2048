@@ -41,7 +41,7 @@ bool moveCardsUp(Card *gameBoard, int *score)
 
     for (int c = 0; c < BOARD_SIZE; c++)
     {
-        for (int r = 0; r < BOARD_SIZE - 1; r++)
+        for (int r = BOARD_SIZE - 1; r >= 0; r--)
         {
             Card *currentCard = (gameBoard + r * BOARD_SIZE + c);
             if (currentCard->value == 0)
