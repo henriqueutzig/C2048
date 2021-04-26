@@ -1,3 +1,6 @@
+#ifndef _Window
+#define _Window
+
 #define WINDOW_DW 680
 #define WINDOW_DH 480
 
@@ -17,3 +20,5 @@ enum screenState {
     credits,
     quit
 };
+
+#endif

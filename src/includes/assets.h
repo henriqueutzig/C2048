@@ -1,7 +1,11 @@
 #define TEXTURES_PATH "src/resources/textures/"
 #define SOUNDS_PATH "src/resources/audio/"
 
+#define STYLES_PATH "styles/"
+
 #define GAME_LOGO TEXTURES_PATH "logo.png"
+
+#define DRACULA_STYLE STYLES_PATH "dracula.rgs"
 
 // Game Scene
 #define BOARD_BG TEXTURES_PATH "board.png"

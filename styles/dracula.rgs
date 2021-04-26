@@ -1,0 +1,16 @@
+#
+# rgs style text file (v3.1) - raygui style file generated using rGuiStyler
+#
+# Info:  p <controlId> <propertyId> <propertyValue>  // Property description
+#
+p 00 00 0xbd93f9ff    DEFAULT_BORDER_COLOR_NORMAL 
+p 00 01 0x44475aff    DEFAULT_BASE_COLOR_NORMAL 
+p 00 07 0xf8f8f2ff    DEFAULT_BASE_COLOR_PRESSED 
+p 00 03 0xbd93f9ff    DEFAULT_BORDER_COLOR_FOCUSED
+p 00 04 0xf8f8f2ff    DEFAULT_BASE_COLOR_FOCUSED
+p 00 02 0xbd93f9ff    DEFAULT_TEXT_COLOR_NORMAL 
+p 00 05 0xbd93f9ff    DEFAULT_TEXT_COLOR_FOCUSED
+p 00 08 0xbd93f9ff    DEFAULT_TEXT_COLOR_PRESSED
+p 00 04 0xc7effeff    DEFAULT_BASE_COLOR_FOCUSED 
+p 00 06 0x0392c7ff    DEFAULT_BORDER_COLOR_PRESSED 
+p 00 19 0x282a36ff    DEFAULT_BACKGROUND_COLOR
