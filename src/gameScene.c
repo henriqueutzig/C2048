@@ -71,6 +71,25 @@ void drawGameScene(GameScene *gameScene, GameState gameState)
 
     ClearBackground(BACKGROUND_COLOR);
 
+    if (gameScene->saveGameDialog.isActive || gameScene->newGameDialog.isActive || gameScene->quitGameDialog.isActive)
+        GuiLock();
+
+    DrawTexture(gameScene->board.texture, gameScene->board.pos.x, gameScene->board.pos.y, WHITE);
+
+    drawBoardCards(gameState, gameScene->board);
+
+    drawScoreBlock(gameScene->scoreBlock, gameState.score);
+    drawMovementBlock(gameScene->movementBlock, gameState.movements);
+    drawRankingBlock(gameScene->rankingBlock, gameScene->medal, testNames, 4);
+
+    drawElementUI(gameScene->quitKey);
+    drawElementUI(gameScene->newGameKey);
+    drawElementUI(gameScene->saveKey);
+    drawElementUI(gameScene->movementsKey);
+
+    drawButton(gameScene->btBackToMenu);
+
+    GuiUnlock();
     if (gameScene->newGameDialog.isActive)
     {
         gameScene->newGameDialog.buttonPressed = GuiMessageBox((Rectangle){WINDOW_DW / 2 - 100, WINDOW_DH / 2 - 50, 200, 100}, "New Game", "Wish to start a new game ?", "YES;NO");
@@ -82,23 +101,6 @@ void drawGameScene(GameScene *gameScene, GameState gameState)
     else if (gameScene->saveGameDialog.isActive)
     {
         gameScene->saveGameDialog.buttonPressed = GuiTextInputBox((Rectangle){WINDOW_DW / 2 - 100, WINDOW_DH / 2 - 50, 200, 125}, "Save file", "Insert the name of the save", "SAVE;CANCEL", gameScene->saveFileName);
-    }
-    else
-    {
-        DrawTexture(gameScene->board.texture, gameScene->board.pos.x, gameScene->board.pos.y, WHITE);
-
-        drawBoardCards(gameState, gameScene->board);
-
-        drawScoreBlock(gameScene->scoreBlock, gameState.score);
-        drawMovementBlock(gameScene->movementBlock, gameState.movements);
-        drawRankingBlock(gameScene->rankingBlock, gameScene->medal, testNames, 4);
-
-        drawElementUI(gameScene->quitKey);
-        drawElementUI(gameScene->newGameKey);
-        drawElementUI(gameScene->saveKey);
-        drawElementUI(gameScene->movementsKey);
-
-        drawButton(gameScene->btBackToMenu);
     }
 
     EndDrawing();

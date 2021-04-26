@@ -8,19 +8,18 @@ void drawMainMenu(MainMenu *mainMenu)
     ClearBackground(BACKGROUND_COLOR);
 
     if (mainMenu->fileDialogState.fileDialogActive)
-    {
-        GuiFileDialog(&mainMenu->fileDialogState);
-    }
-    else
-    {
-        drawButton(mainMenu->btNewGame);
-        drawButton(mainMenu->btLoadGame);
-        drawButton(mainMenu->btHighScores);
-        drawButton(mainMenu->btCredits);
-        drawButton(mainMenu->btQuit);
+        GuiLock();
 
-        drawElementUI(mainMenu->logo);
-    }
+    drawButton(mainMenu->btNewGame);
+    drawButton(mainMenu->btLoadGame);
+    drawButton(mainMenu->btHighScores);
+    drawButton(mainMenu->btCredits);
+    drawButton(mainMenu->btQuit);
+
+    drawElementUI(mainMenu->logo);
+
+    GuiUnlock();
+    GuiFileDialog(&mainMenu->fileDialogState);
 
     EndDrawing();
 }
