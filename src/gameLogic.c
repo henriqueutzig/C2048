@@ -15,40 +15,22 @@ GameState initGameState(Card *currentBoardState, Texture2D cardTexture, int move
 
 void deslocateCards(Card *gameBoard, int currentRow, int column)
 {
-    for (size_t r = currentRow; r < BOARD_SIZE - 1; r++)
+    for (int r = currentRow; r < BOARD_SIZE - 1; r++)
     {
-        (gameBoard + r * BOARD_SIZE + column)->value = (gameBoard + (r + 1) * BOARD_SIZE + column)->value;
-        (gameBoard + r * BOARD_SIZE + column)->recSrc = getRectSpriteFromMatrix((gameBoard + r * BOARD_SIZE + column)->value, 3, 4, CARD_SIZE, CARD_SIZE);
+        Card *currentCard = (gameBoard + r * BOARD_SIZE + column);
+        currentCard->value = (gameBoard + (r + 1) * BOARD_SIZE + column)->value;
+        currentCard->recSrc = getRectSpriteFromMatrix(currentCard->value, 3, 4, CARD_SIZE, CARD_SIZE);
     }
     *(gameBoard + (BOARD_SIZE - 1) * BOARD_SIZE + column) = CARD_VOID;
 }
 
-bool findEqualInColumn(Card *gameBoard, int currentRow, int column)
+bool checkZerosInColumn(Card *gameBoard, int currentRow, int column)
 {
-    Card *initialCard = (gameBoard + currentRow * BOARD_SIZE + column);
-
-    for (size_t r = currentRow + 1; r < BOARD_SIZE - 1; r++)
+    for (int r = currentRow + 1; r < BOARD_SIZE; r++)
     {
         Card *currentCard = (gameBoard + r * BOARD_SIZE + column);
-        if (initialCard->value == currentCard->value)
-        {
+        if (currentCard->value != 0)
             return true;
-        }
-        else if (currentCard->value == 0)
-        {
-            for (int i = r + 1; i < BOARD_SIZE; i++)
-            {
-                if (initialCard->value == (gameBoard + i * BOARD_SIZE + column)->value)
-                {
-                    *(gameBoard + i * BOARD_SIZE + column) = CARD_VOID;
-                    return true;
-                }
-                else if ((gameBoard + i * BOARD_SIZE + column)->value != 0)
-                {
-                    return false;
-                }
-            }
-        }
     }
     return false;
 }
@@ -59,23 +41,30 @@ bool moveCardsUp(Card *gameBoard, int *score)
 
     for (int c = 0; c < BOARD_SIZE; c++)
     {
+        for (int r = 0; r < BOARD_SIZE - 1; r++)
+        {
+            Card *currentCard = (gameBoard + r * BOARD_SIZE + c);
+            if (currentCard->value == 0)
+            {
+                if (checkZerosInColumn(gameBoard, r, c))
+                {
+                    deslocateCards(gameBoard, r, c);
+                    isValidMove = true;
+                }
+            }
+        }
+
         for (int r = 0; r < BOARD_SIZE; r++)
         {
             Card *currentCard = (gameBoard + r * BOARD_SIZE + c);
-
-            if (currentCard->value != 0 && findEqualInColumn(gameBoard, r, c))
+            if (currentCard->value == 0)
+                break;
+            if (currentCard->value == (gameBoard + (r + 1) * BOARD_SIZE + c)->value)
             {
                 currentCard->value++;
                 currentCard->recSrc = getRectSpriteFromMatrix(currentCard->value, 3, 4, CARD_SIZE, CARD_SIZE);
                 *score += pow(2, currentCard->value);
                 deslocateCards(gameBoard, r + 1, c);
-                isValidMove = true;
-            }
-            else if (r != BOARD_SIZE - 1 && currentCard->value == 0 && (gameBoard + (r + 1) * BOARD_SIZE + c)->value != 0)
-            {
-                currentCard->value = (gameBoard + (r + 1) * BOARD_SIZE + c)->value;
-                currentCard->recSrc = getRectSpriteFromMatrix(currentCard->value, 3, 4, CARD_SIZE, CARD_SIZE);
-                deslocateCards(gameBoard, r, c);
                 isValidMove = true;
             }
         }
