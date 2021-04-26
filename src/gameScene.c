@@ -1,7 +1,6 @@
 #include "includes/gameScene.h"
 #include "includes/window.h"
 
-
 void drawMovementBlock(ElementUI movementBlockUI, int movement)
 {
     DrawTexture(movementBlockUI.texture, movementBlockUI.pos.x, movementBlockUI.pos.y, WHITE);
@@ -70,14 +69,11 @@ void drawGameScene(GameScene *gameScene, GameState gameState, char highScores[][
 
     DrawTexture(gameScene->board.texture, gameScene->board.pos.x, gameScene->board.pos.y, WHITE);
 
-
-    drawRankingBlock(gameScene->rankingBlock, gameScene->medal, highScores, nHS, NAME_SPACING, MEDAL_X_OFFSET, NAME_Y_OFFSET);
     drawBoardCards(gameState, gameScene->board);
-
 
     drawScoreBlock(gameScene->scoreBlock, gameState.score);
     drawMovementBlock(gameScene->movementBlock, gameState.movements);
-    drawRankingBlock(gameScene->rankingBlock, gameScene->medal, testNames, 4);
+    drawRankingBlock(gameScene->rankingBlock, gameScene->medal, highScores, nHS, NAME_SPACING, MEDAL_X_OFFSET, NAME_Y_OFFSET);
 
     drawElementUI(gameScene->quitKey);
     drawElementUI(gameScene->newGameKey);
