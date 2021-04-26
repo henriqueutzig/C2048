@@ -15,27 +15,27 @@ void drawScoreBlock(ElementUI scoreBlockUI, int score)
 }
 
 // TODO: rank com linked list
-void drawRankingBlock(ElementUI rankingBlockUI, ElementUI medal, char names[][MAX_STRING_SIZE], int size)
+void drawRankingBlock(ElementUI rankingBlockUI, ElementUI medal, char names[][MAX_STRING_SIZE], int size, int nameSpacing, int medalXOffset, int nameYOffset)
 {
     DrawTexture(rankingBlockUI.texture, rankingBlockUI.pos.x, rankingBlockUI.pos.y, WHITE);
 
     for (int i = 0; i < size; i++)
     {
         int posX = rankingBlockUI.pos.x + 10;
-        int posY = rankingBlockUI.pos.y + (i * 18) + 32;
+        int posY = rankingBlockUI.pos.y + (i * nameSpacing) + nameYOffset;
         switch (i)
         {
         case 0:
             DrawText(TextFormat("%s", names[i]), posX, posY, rankingBlockUI.fontSize, DRACULA_YELLOW);
-            DrawTextureRec(medal.texture, getRectSpriteFromArray(GOLD_MEDAL, MEDAL_SIZE_W, MEDAL_SIZE_H), (Vector2){posX + 150, posY + 3}, WHITE);
+            DrawTextureRec(medal.texture, getRectSpriteFromArray(GOLD_MEDAL, MEDAL_SIZE_W, MEDAL_SIZE_H), (Vector2){posX + medalXOffset, posY + 3}, WHITE);
             break;
         case 1:
             DrawText(TextFormat("%s", names[i]), posX, posY, rankingBlockUI.fontSize, rankingBlockUI.color);
-            DrawTextureRec(medal.texture, getRectSpriteFromArray(SILVER_MEDAL, MEDAL_SIZE_W, MEDAL_SIZE_H), (Vector2){posX + 150, posY + 3}, WHITE);
+            DrawTextureRec(medal.texture, getRectSpriteFromArray(SILVER_MEDAL, MEDAL_SIZE_W, MEDAL_SIZE_H), (Vector2){posX + medalXOffset, posY + 3}, WHITE);
             break;
         case 2:
             DrawText(TextFormat("%s", names[i]), posX, posY, rankingBlockUI.fontSize, rankingBlockUI.color);
-            DrawTextureRec(medal.texture, getRectSpriteFromArray(BRONZE_MEDAL, MEDAL_SIZE_W, MEDAL_SIZE_H), (Vector2){posX + 150, posY + 3}, WHITE);
+            DrawTextureRec(medal.texture, getRectSpriteFromArray(BRONZE_MEDAL, MEDAL_SIZE_W, MEDAL_SIZE_H), (Vector2){posX + medalXOffset, posY + 3}, WHITE);
             break;
         default:
             DrawText(TextFormat("%s", names[i]), posX, posY, rankingBlockUI.fontSize, rankingBlockUI.color);
@@ -72,7 +72,7 @@ void drawGameScene(GameScene gameScene, GameState gameState, char highScores[][M
     drawScoreBlock(gameScene.scoreBlock, gameState.score);
     drawMovementBlock(gameScene.movementBlock, gameState.movements);
 
-    drawRankingBlock(gameScene.rankingBlock, gameScene.medal, highScores, nHS);
+    drawRankingBlock(gameScene.rankingBlock, gameScene.medal, highScores, nHS, NAME_SPACING, MEDAL_X_OFFSET, NAME_Y_OFFSET);
 
     drawElementUI(gameScene.quitKey);
     drawElementUI(gameScene.newGameKey);
