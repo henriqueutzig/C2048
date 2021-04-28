@@ -5,6 +5,7 @@
 #include "button.h"
 #include "UI.h"
 #include <string.h>
+#include "ranking.h"
 
 #define TITLE_TXT "LEADERBOARD:"
 
@@ -18,6 +19,7 @@
 typedef struct HighScoresScene
 {
     Button btMainMenu;
+    ElementUI leaderboardTitle;
     ElementUI rankingBlock;
     ElementUI medal;
 } HighScoresScene;
@@ -25,6 +27,6 @@ typedef struct HighScoresScene
 HighScoresScene initHighScores();
 void deInitHighScores(HighScoresScene *highScoresScene);
 
-void drawHighScoresScene(HighScoresScene highScoresScene, char highScores[][LEN_RANKER]);
+void drawHighScoresScene(HighScoresScene highScoresScene, Ranker rank[N_MAX_RANKERS], int nHS);
 void highScoresSceneAction(HighScoresScene *highScoresScene, int *screenState);
 #endif

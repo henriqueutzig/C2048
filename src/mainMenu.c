@@ -28,7 +28,6 @@ void mainMenuBtAction(MainMenu *menuScreen, int *screenState, Card *initialBoard
 {
     if (menuScreen->fileDialogState.SelectFilePressed)
     {
-        // Load image file (if supported extension)
         if (IsFileExtension(menuScreen->fileDialogState.fileNameText, ".bin"))
         {
             *gameState = loadGame(TextFormat("%s/%s", menuScreen->fileDialogState.dirPathText, menuScreen->fileDialogState.fileNameText), initialBoardState);

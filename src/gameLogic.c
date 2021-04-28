@@ -138,7 +138,6 @@ void rotateBoardLeft(Card *gameBoard)
     }
 }
 
-// Only call this function when the currentBoardState is the same as initialBoardState
 void generateRandomCard(GameState *gameState, Card *gameBoard)
 {
     int x, y;
@@ -152,8 +151,6 @@ void generateRandomCard(GameState *gameState, Card *gameBoard)
     int newCardEnum = (1 + (rand() % (10 - 1 + 1))) > 9 ? C4 : C2;
     Card newCard = {getRectSpriteFromMatrix(newCardEnum, 3, 4, CARD_SIZE, CARD_SIZE), newCardEnum};
 
-    // Trying to change the null value into newCard
-    // Somehow it works, so lets try and not touch it
     *(gameBoard + y * BOARD_SIZE + x) = newCard;
     *(gameState->currentBoardState[0] + y * BOARD_SIZE + x) = (gameBoard + y * BOARD_SIZE + x);
 }

@@ -10,10 +10,10 @@ typedef struct Window
     int height;
     int screenState;
     char name[6];
-    bool darkMode;
 } Window;
 
-enum screenState {
+enum screenState
+{
     mainMenu,
     game,
     highScore,

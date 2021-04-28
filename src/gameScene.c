@@ -4,40 +4,43 @@
 void drawMovementBlock(ElementUI movementBlockUI, int movement)
 {
     DrawTexture(movementBlockUI.texture, movementBlockUI.pos.x, movementBlockUI.pos.y, WHITE);
-    DrawText(TextFormat("%04i", movement), movementBlockUI.pos.x + 28, movementBlockUI.pos.y + 22, movementBlockUI.fontSize, movementBlockUI.color);
+    DrawText(TextFormat("%04d", movement), movementBlockUI.pos.x + 34, movementBlockUI.pos.y + 22, movementBlockUI.fontSize, movementBlockUI.color);
 }
 
 void drawScoreBlock(ElementUI scoreBlockUI, int score)
 {
     DrawTexture(scoreBlockUI.texture, scoreBlockUI.pos.x, scoreBlockUI.pos.y, WHITE);
-    DrawText(TextFormat("%04i", score), scoreBlockUI.pos.x + 14, scoreBlockUI.pos.y + 22, scoreBlockUI.fontSize, scoreBlockUI.color);
+    DrawText(TextFormat("%05d", score), scoreBlockUI.pos.x + 10, scoreBlockUI.pos.y + 22, scoreBlockUI.fontSize, scoreBlockUI.color);
 }
 
-// TODO: rank com linked list
-void drawRankingBlock(ElementUI rankingBlockUI, ElementUI medal, char names[][MAX_STRING_SIZE], int size, int nameSpacing, int medalXOffset, int nameYOffset)
+void drawRankingBlock(ElementUI rankingBlockUI, ElementUI medal, Ranker rank[N_MAX_RANKERS], int nHS)
 {
     DrawTexture(rankingBlockUI.texture, rankingBlockUI.pos.x, rankingBlockUI.pos.y, WHITE);
 
-    for (int i = 0; i < size; i++)
+    for (int i = 0; i < nHS; i++)
     {
         int posX = rankingBlockUI.pos.x + 10;
-        int posY = rankingBlockUI.pos.y + (i * nameSpacing) + nameYOffset;
+        int posY = rankingBlockUI.pos.y + (i * NAME_SPACING) + NAME_Y_OFFSET;
+
+        if (rank[i].score == 0)
+        {
+            continue;
+        }
+
+        DrawText(TextFormat("%s", rank[i].name), posX, posY, rankingBlockUI.fontSize, rankingBlockUI.color);
+        DrawText(TextFormat("%05d", rank[i].score), posX + SCORE_X_OFFSET, posY, rankingBlockUI.fontSize, rankingBlockUI.color);
         switch (i)
         {
         case 0:
-            DrawText(TextFormat("%s", names[i]), posX, posY, rankingBlockUI.fontSize, DRACULA_YELLOW);
-            DrawTextureRec(medal.texture, getRectSpriteFromArray(GOLD_MEDAL, MEDAL_SIZE_W, MEDAL_SIZE_H), (Vector2){posX + medalXOffset, posY + 3}, WHITE);
+            DrawText(TextFormat("%s", rank[i].name), posX, posY, rankingBlockUI.fontSize, DRACULA_YELLOW);
+            DrawText(TextFormat("%06d", rank[i].score), posX + SCORE_X_OFFSET, posY, rankingBlockUI.fontSize, DRACULA_YELLOW);
+            DrawTextureRec(medal.texture, getRectSpriteFromArray(GOLD_MEDAL, MEDAL_SIZE_W, MEDAL_SIZE_H), (Vector2){posX + MEDAL_X_OFFSET, posY + 3}, WHITE);
             break;
         case 1:
-            DrawText(TextFormat("%s", names[i]), posX, posY, rankingBlockUI.fontSize, rankingBlockUI.color);
-            DrawTextureRec(medal.texture, getRectSpriteFromArray(SILVER_MEDAL, MEDAL_SIZE_W, MEDAL_SIZE_H), (Vector2){posX + medalXOffset, posY + 3}, WHITE);
+            DrawTextureRec(medal.texture, getRectSpriteFromArray(SILVER_MEDAL, MEDAL_SIZE_W, MEDAL_SIZE_H), (Vector2){posX + MEDAL_X_OFFSET, posY + 3}, WHITE);
             break;
         case 2:
-            DrawText(TextFormat("%s", names[i]), posX, posY, rankingBlockUI.fontSize, rankingBlockUI.color);
-            DrawTextureRec(medal.texture, getRectSpriteFromArray(BRONZE_MEDAL, MEDAL_SIZE_W, MEDAL_SIZE_H), (Vector2){posX + medalXOffset, posY + 3}, WHITE);
-            break;
-        default:
-            DrawText(TextFormat("%s", names[i]), posX, posY, rankingBlockUI.fontSize, rankingBlockUI.color);
+            DrawTextureRec(medal.texture, getRectSpriteFromArray(BRONZE_MEDAL, MEDAL_SIZE_W, MEDAL_SIZE_H), (Vector2){posX + MEDAL_X_OFFSET, posY + 3}, WHITE);
             break;
         }
     }
@@ -58,7 +61,7 @@ void drawBoardCards(GameState gameState, ElementUI board)
     }
 }
 
-void drawGameScene(GameScene *gameScene, GameState gameState, char highScores[][MAX_STRING_SIZE], int nHS)
+void drawGameScene(GameScene *gameScene, GameState gameState, Ranker rank[N_MAX_RANKERS], int nHS)
 {
     BeginDrawing();
 
@@ -73,7 +76,7 @@ void drawGameScene(GameScene *gameScene, GameState gameState, char highScores[][
 
     drawScoreBlock(gameScene->scoreBlock, gameState.score);
     drawMovementBlock(gameScene->movementBlock, gameState.movements);
-    drawRankingBlock(gameScene->rankingBlock, gameScene->medal, highScores, nHS, NAME_SPACING, MEDAL_X_OFFSET, NAME_Y_OFFSET);
+    drawRankingBlock(gameScene->rankingBlock, gameScene->medal, rank, nHS);
 
     drawElementUI(gameScene->quitKey);
     drawElementUI(gameScene->newGameKey);
@@ -167,9 +170,9 @@ GameScene initGameScene()
 {
     GameScene window;
     window.board = initElementUI(LoadTexture(BOARD_BG), (Vector2){18, 40});
-    window.movementBlock = initElementTextUI(LoadTexture(MOVEMENT_BLOCK), (Vector2){436, 40}, WHITE, 20);
-    window.scoreBlock = initElementTextUI(LoadTexture(SCORE_BLOCK), (Vector2){555, 40}, WHITE, 20);
-    window.rankingBlock = initElementTextUI(LoadTexture(RANKING_BLOCK), (Vector2){436, 109}, WHITE, 18);
+    window.movementBlock = initElementTextUI(LoadTexture(MOVEMENT_BLOCK), (Vector2){436, 40}, WHITE, 18);
+    window.scoreBlock = initElementTextUI(LoadTexture(SCORE_BLOCK), (Vector2){555, 40}, DRACULA_YELLOW, 18);
+    window.rankingBlock = initElementTextUI(LoadTexture(RANKING_BLOCK), (Vector2){436, 109}, WHITE, 16);
 
     window.quitKey = initElementUI(LoadTexture(QUIT_KEY), (Vector2){436, 343});
     window.newGameKey = initElementUI(LoadTexture(NEW_GAME_KEY), (Vector2){436, 379});

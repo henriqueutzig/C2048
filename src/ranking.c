@@ -2,7 +2,7 @@
 
 bool loadRankers(Ranker *rankers)
 {
-    FILE *file = fopen(SHIGHSCORE_PATH, "r");
+    FILE *file = fopen(HIGHSCORE_PATH, "r");
     if (file == NULL)
     {
         fprintf(stderr, "\nErro ao abrir o arquivo\n");
@@ -33,7 +33,7 @@ bool loadRankers(Ranker *rankers)
     return true;
 }
 
-bool saveNewRanker(Ranker *arrRankers, Ranker newRanker, char *str)
+bool saveNewRanker(Ranker *arrRankers, Ranker newRanker)
 {
     bool rewriteHighScores = false;
     printf("%s %i\t%s %i", newRanker.name, newRanker.score, (arrRankers + N_MAX_RANKERS)->name, (arrRankers + N_MAX_RANKERS)->score);
@@ -42,7 +42,6 @@ bool saveNewRanker(Ranker *arrRankers, Ranker newRanker, char *str)
         *(arrRankers + N_MAX_RANKERS) = newRanker;
         sortRankers(arrRankers);
         updateHighScoresFile(arrRankers);
-        getHighScores(arrRankers, str);
     }
 
     return rewriteHighScores;
@@ -51,6 +50,7 @@ bool saveNewRanker(Ranker *arrRankers, Ranker newRanker, char *str)
 void sortRankers(Ranker *arrRankers)
 {
     int n = N_MAX_RANKERS;
+
     while (((arrRankers + n)->score > (arrRankers + n - 1)->score) && (n > 0))
     {
         Ranker aux = *(arrRankers + n - 1);
@@ -62,7 +62,7 @@ void sortRankers(Ranker *arrRankers)
 
 int updateHighScoresFile(Ranker *arrRankers)
 {
-    FILE *file = fopen(SHIGHSCORE_PATH, "w");
+    FILE *file = fopen(HIGHSCORE_PATH, "w");
     if (file == NULL)
     {
         fprintf(stderr, "\nErro ao abrir o arquivo\n");
@@ -77,12 +77,4 @@ int updateHighScoresFile(Ranker *arrRankers)
     }
     fflush(file);
     return fclose(file);
-}
-
-int getHighScores(Ranker *arrRankers, char *str)
-{
-    for (int i = 0; i < N_MAX_RANKERS; i++)
-        sprintf((str + (i * MAX_HS_LENGTH)), "%s %i", (arrRankers + i)->name, (arrRankers + i)->score);
-
-    return 1;
 }
