@@ -119,25 +119,25 @@ void gameSceneAction(GameScene *gameScene, int *screenState, GameState *gameStat
 
         if (gameScene->saveGameDialog.buttonPressed == YES)
         {
-            gameScene->saveGameDialog.buttonPressed = NO;
+            gameScene->saveGameDialog.buttonPressed = 0;
             gameScene->saveGameDialog.isActive = false;
             saveGame(*gameState, gameBoard, TextFormat("%s/%s%s", FILES_PATH, gameScene->saveFileName, ".bin"));
         }
         else if (gameScene->newGameDialog.buttonPressed == YES)
         {
-            gameScene->newGameDialog.buttonPressed = NO;
+            gameScene->newGameDialog.buttonPressed = 0;
             gameScene->newGameDialog.isActive = false;
             restartGame(gameBoard, gameState);
         }
         else if (gameScene->quitGameDialog.buttonPressed == YES)
         {
-            gameScene->quitGameDialog.buttonPressed = NO;
+            gameScene->quitGameDialog.buttonPressed = 0;
             gameScene->quitGameDialog.isActive = false;
             *screenState = mainMenu;
         }
         else if (gameScene->endGameDialog.buttonPressed == YES)
         {
-            gameScene->endGameDialog.buttonPressed = NO;
+            gameScene->endGameDialog.buttonPressed = 0;
             gameScene->endGameDialog.isActive = false;
             Ranker newRanker;
             newRanker.score = gameState->score;
@@ -148,6 +148,7 @@ void gameSceneAction(GameScene *gameScene, int *screenState, GameState *gameStat
         }
         else if (gameScene->endGameDialog.buttonPressed == NO)
         {
+            gameScene->endGameDialog.buttonPressed = 0;
             gameScene->endGameDialog.isActive = false;
             *screenState = highScore;
         }

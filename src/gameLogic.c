@@ -112,22 +112,19 @@ int getGameSituation(GameState *gameState, Card *gameBoard)
         }
     }
 
-    int gameSituation = ON_GOING;
-    // Check if there are still valid moves, if not then gameSituation = false
-    GameState auxGameState = *gameState;
-    bool validMoves[4];
+    // Check if there are still valid moves, if not then gameSituation = GAME_OVER
+    int tempScore = gameState->score;
+    bool validMoves = false;
     for (int i = 0; i < 4; i++)
     {
         for (int r = 0; r < i; r++)
             rotateBoardLeft(&auxBoard[0][0]);
-        validMoves[i] = moveCardsUp(&auxBoard[0][0], &auxGameState.score);
+        validMoves |= moveCardsUp(&auxBoard[0][0], &tempScore);
         for (int r = 0, n = (4 - i); r < n; r++)
             rotateBoardLeft(&auxBoard[0][0]);
     }
-    if(!validMoves[0] && !validMoves[1] && !validMoves[2] && !validMoves[3])
-        gameSituation = GAME_OVER;
 
-    return gameSituation;
+    return validMoves ? ON_GOING : GAME_OVER;
 }
 
 int keyToMove(int key)
