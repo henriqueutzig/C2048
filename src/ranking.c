@@ -36,10 +36,9 @@ bool loadRankers(Ranker *rankers)
 bool saveNewRanker(Ranker *arrRankers, Ranker newRanker)
 {
     bool rewriteHighScores = false;
-    printf("%s %i\t%s %i", newRanker.name, newRanker.score, (arrRankers + N_MAX_RANKERS)->name, (arrRankers + N_MAX_RANKERS)->score);
-    if (newRanker.score > (arrRankers + N_MAX_RANKERS)->score)
+    if (newRanker.score > (arrRankers + N_MAX_RANKERS - 1)->score)
     {
-        *(arrRankers + N_MAX_RANKERS -1) = newRanker;
+        *(arrRankers + N_MAX_RANKERS - 1) = newRanker;
         sortRankers(arrRankers);
         updateHighScoresFile(arrRankers);
     }
