@@ -96,10 +96,20 @@ int moveCards(GameState *gameState, Card *gameBoard, int moveType)
     return getGameSituation(gameState, gameBoard);
 }
 
+// TODO: implement logic to check whether the game is over and there are no more valid moves
 int getGameSituation(GameState *gameState, Card *gameBoard)
 {
-    // TODO: implement logic to check whether the game is on going or over, and than if the player won or lost
-    return WON;
+    int gameSituation = ON_GOING;
+    
+    // Verify if there is a 2048 card on the board
+    for (int r = 0; r < BOARD_SIZE; r++)
+        for (int c = 0; c < BOARD_SIZE; c++)
+            if ((gameBoard + r * BOARD_SIZE + c)->value == C2048)
+                return WON;
+    
+    // Check if there are still valid moves, if not then gameSituation = false
+        
+    return gameSituation;
 }
 
 int keyToMove(int key)

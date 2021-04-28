@@ -39,7 +39,7 @@ bool saveNewRanker(Ranker *arrRankers, Ranker newRanker)
     printf("%s %i\t%s %i", newRanker.name, newRanker.score, (arrRankers + N_MAX_RANKERS)->name, (arrRankers + N_MAX_RANKERS)->score);
     if (newRanker.score > (arrRankers + N_MAX_RANKERS)->score)
     {
-        *(arrRankers + N_MAX_RANKERS) = newRanker;
+        *(arrRankers + N_MAX_RANKERS -1) = newRanker;
         sortRankers(arrRankers);
         updateHighScoresFile(arrRankers);
     }
@@ -49,7 +49,7 @@ bool saveNewRanker(Ranker *arrRankers, Ranker newRanker)
 
 void sortRankers(Ranker *arrRankers)
 {
-    int n = N_MAX_RANKERS;
+    int n = N_MAX_RANKERS - 1;
 
     while (((arrRankers + n)->score > (arrRankers + n - 1)->score) && (n > 0))
     {

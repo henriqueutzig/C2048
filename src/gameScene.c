@@ -141,8 +141,8 @@ void gameSceneAction(GameScene *gameScene, int *screenState, GameState *gameStat
             gameScene->endGameDialog.isActive = false;
             Ranker newRanker;
             newRanker.score = gameState->score;
-
             strcpy(newRanker.name, gameScene->rankingName);
+
             saveNewRanker(rank, newRanker);
             *screenState = highScore;
         }
