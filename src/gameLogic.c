@@ -96,19 +96,37 @@ int moveCards(GameState *gameState, Card *gameBoard, int moveType)
     return getGameSituation(gameState, gameBoard);
 }
 
-// TODO: implement logic to check whether the game is over and there are no more valid moves
 int getGameSituation(GameState *gameState, Card *gameBoard)
 {
-    int gameSituation = ON_GOING;
-    
+    Card auxBoard[BOARD_SIZE][BOARD_SIZE];
+
     // Verify if there is a 2048 card on the board
     for (int r = 0; r < BOARD_SIZE; r++)
+    {
         for (int c = 0; c < BOARD_SIZE; c++)
+        {
             if ((gameBoard + r * BOARD_SIZE + c)->value == C2048)
                 return WON;
-    
+            else
+                auxBoard[r][c] = *(gameBoard + r * BOARD_SIZE + c);
+        }
+    }
+
+    int gameSituation = ON_GOING;
     // Check if there are still valid moves, if not then gameSituation = false
-        
+    GameState auxGameState = *gameState;
+    bool validMoves[4];
+    for (int i = 0; i < 4; i++)
+    {
+        for (int r = 0; r < i; r++)
+            rotateBoardLeft(&auxBoard[0][0]);
+        validMoves[i] = moveCardsUp(&auxBoard[0][0], &auxGameState.score);
+        for (int r = 0, n = (4 - i); r < n; r++)
+            rotateBoardLeft(&auxBoard[0][0]);
+    }
+    if(!validMoves[0] && !validMoves[1] && !validMoves[2] && !validMoves[3])
+        gameSituation = GAME_OVER;
+
     return gameSituation;
 }
 
