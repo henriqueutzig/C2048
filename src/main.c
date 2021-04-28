@@ -49,7 +49,7 @@ int main(void)
             drawMainMenu(&menuScreen);
             break;
         case game:
-            gameSceneAction(&gameScreen, &(window.screenState), &gameState, &initialBoardState[0][0]);
+            gameSceneAction(&gameScreen, &(window.screenState), &gameState, &initialBoardState[0][0], &rankers);
             drawGameScene(&gameScreen, gameState, rankers, N_MAX_RANKERS);
             break;
         case highScore:

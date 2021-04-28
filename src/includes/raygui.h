@@ -464,7 +464,7 @@ RAYGUIDEF Vector2 GuiGrid(Rectangle bounds, float spacing, int subdivs);        
 RAYGUIDEF int GuiListView(Rectangle bounds, const char *text, int *scrollIndex, int active);            // List View control, returns selected list item index
 RAYGUIDEF int GuiListViewEx(Rectangle bounds, const char **text, int count, int *focus, int *scrollIndex, int active);      // List View with extended parameters
 RAYGUIDEF int GuiMessageBox(Rectangle bounds, const char *title, const char *message, const char *buttons);                 // Message Box control, displays a message
-RAYGUIDEF int GuiTextInputBox(Rectangle bounds, const char *title, const char *message, const char *buttons, char *text);   // Text Input Box control, ask for text
+RAYGUIDEF int GuiTextInputBox(Rectangle bounds, const char *title, const char *message, const char *buttons, char *text, int maxChar);   // Text Input Box control, ask for text
 RAYGUIDEF Color GuiColorPicker(Rectangle bounds, Color color);                                          // Color Picker control (multiple color controls)
 RAYGUIDEF Color GuiColorPanel(Rectangle bounds, Color color);                                           // Color Panel control
 RAYGUIDEF float GuiColorBarAlpha(Rectangle bounds, float alpha);                                        // Color Bar Alpha control
@@ -2585,13 +2585,13 @@ int GuiMessageBox(Rectangle bounds, const char *title, const char *message, cons
 }
 
 // Text Input Box control, ask for text
-int GuiTextInputBox(Rectangle bounds, const char *title, const char *message, const char *buttons, char *text)
+int GuiTextInputBox(Rectangle bounds, const char *title, const char *message, const char *buttons, char *text, int maxChar)
 {
     #define TEXTINPUTBOX_BUTTON_HEIGHT      24
     #define TEXTINPUTBOX_BUTTON_PADDING     10
     #define TEXTINPUTBOX_HEIGHT             30
 
-    #define TEXTINPUTBOX_MAX_TEXT_LENGTH   256
+    //#define TEXTINPUTBOX_MAX_TEXT_LENGTH   256
 
     // Used to enable text edit mode
     // WARNING: No more than one GuiTextInputBox() should be open at the same time
@@ -2641,7 +2641,7 @@ int GuiTextInputBox(Rectangle bounds, const char *title, const char *message, co
         GuiSetStyle(LABEL, TEXT_ALIGNMENT, prevTextAlignment);
     }
 
-    if (GuiTextBox(textBoxBounds, text, TEXTINPUTBOX_MAX_TEXT_LENGTH, textEditMode)) textEditMode = !textEditMode;
+    if (GuiTextBox(textBoxBounds, text, maxChar, textEditMode)) textEditMode = !textEditMode;
 
     int prevBtnTextAlignment = GuiGetStyle(BUTTON, TEXT_ALIGNMENT);
     GuiSetStyle(BUTTON, TEXT_ALIGNMENT, GUI_TEXT_ALIGN_CENTER);

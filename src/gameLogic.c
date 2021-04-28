@@ -99,7 +99,7 @@ int moveCards(GameState *gameState, Card *gameBoard, int moveType)
 int getGameSituation(GameState *gameState, Card *gameBoard)
 {
     // TODO: implement logic to check whether the game is on going or over, and than if the player won or lost
-    return ON_GOING;
+    return WON;
 }
 
 int keyToMove(int key)

@@ -99,19 +99,18 @@ void drawGameScene(GameScene *gameScene, GameState gameState, Ranker rank[N_MAX_
     else if (gameScene->saveGameDialog.isActive)
     {
         DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), Fade(BACKGROUND_COLOR, 0.85f));
-        gameScene->saveGameDialog.buttonPressed = GuiTextInputBox((Rectangle){WINDOW_DW / 2 - 100, WINDOW_DH / 2 - 50, 200, 125}, "Save file", "Insert the name of the save", "SAVE;CANCEL", gameScene->saveFileName);
+        gameScene->saveGameDialog.buttonPressed = GuiTextInputBox((Rectangle){WINDOW_DW / 2 - 100, WINDOW_DH / 2 - 50, 200, 125}, "Save file", "Insert the name of the save", "SAVE;CANCEL", gameScene->saveFileName, MAX_FILE_NAME_SIZE);
     }
     else if (gameScene->endGameDialog.isActive)
     {
         DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), Fade(BACKGROUND_COLOR, 0.85f));
-        // TODO: a way to limit the user only NAME_SIZE in input
-        gameScene->endGameDialog.buttonPressed = GuiTextInputBox((Rectangle){WINDOW_DW / 2 - 100, WINDOW_DH / 2 - 50, 220, 140}, gameScene->gameSituation == WON ? WIN_MESSAGE : GAME_OVER_MESSAGE, "Insert your name for the leaderboad", "SAVE;NAH", gameScene->rankingName);
+        gameScene->endGameDialog.buttonPressed = GuiTextInputBox((Rectangle){WINDOW_DW / 2 - 100, WINDOW_DH / 2 - 50, 220, 140}, gameScene->gameSituation == WON ? WIN_MESSAGE : GAME_OVER_MESSAGE, "Insert your name for the leaderboad", "SAVE;NAH", gameScene->rankingName, NAME_SIZE);
     }
 
     EndDrawing();
 }
 
-void gameSceneAction(GameScene *gameScene, int *screenState, GameState *gameState, Card *gameBoard)
+void gameSceneAction(GameScene *gameScene, int *screenState, GameState *gameState, Card *gameBoard, Ranker *rank)
 {
     if (gameScene->saveGameDialog.isActive || gameScene->newGameDialog.isActive || gameScene->quitGameDialog.isActive || gameScene->endGameDialog.isActive)
     {
@@ -140,9 +139,13 @@ void gameSceneAction(GameScene *gameScene, int *screenState, GameState *gameStat
         {
             gameScene->endGameDialog.buttonPressed = NO;
             gameScene->endGameDialog.isActive = false;
+            Ranker newRanker;
+            newRanker.score = gameState->score;
+
+            strcpy(newRanker.name, gameScene->rankingName);
+            saveNewRanker(rank, newRanker);
             *screenState = highScore;
         }
-        // No way to check if the user closed the dialog
         else if (gameScene->endGameDialog.buttonPressed == NO)
         {
             gameScene->endGameDialog.isActive = false;

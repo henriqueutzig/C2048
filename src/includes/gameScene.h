@@ -6,6 +6,7 @@
 #include "ranking.h"
 
 #define MAX_STRING_SIZE 31
+#define MAX_FILE_NAME_SIZE 256
 
 #define NAME_SPACING 18
 #define MEDAL_X_OFFSET 150
@@ -55,7 +56,7 @@ typedef struct GameScene
     DialogState saveGameDialog;
     DialogState quitGameDialog;
     DialogState endGameDialog;
-    char saveFileName[512];
+    char saveFileName[MAX_FILE_NAME_SIZE];
     char rankingName[NAME_SIZE];
     int gameSituation;
 } GameScene;
@@ -67,7 +68,7 @@ void drawRankingBlock(ElementUI rankingBlockUI, ElementUI medal, Ranker rank[N_M
 
 void drawGameScene(GameScene *gameScene, GameState gameState, Ranker rank[N_MAX_RANKERS], int nHS);
 
-void gameSceneAction(GameScene *gameScene, int *screenState, GameState *gameState, Card *gameBoard);
+void gameSceneAction(GameScene *gameScene, int *screenState, GameState *gameState, Card *gameBoard, Ranker *rank);
 GameScene initGameScene();
 DialogState initDialogState();
 void deInitGameScene(GameScene *gameScene);

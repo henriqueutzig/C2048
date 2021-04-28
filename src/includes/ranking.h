@@ -10,12 +10,12 @@
 
 #define HIGHSCORE_PATH "src/files/saves/highscores.txt"
 
-#define NAME_SIZE 8
+#define NAME_SIZE 9
 #define N_MAX_RANKERS 10
 
 typedef struct Ranker
 {
-    char name[10];
+    char name[NAME_SIZE];
     int score;
 } Ranker;
 
