@@ -1,7 +1,24 @@
+#ifndef _GameLogic
+#define _GameLogic
+
 #include "raylib.h"
 #include "assets.h"
+#include "UI.h"
+#include <stddef.h>
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <math.h>
 
 #define BOARD_SIZE 4
+#define CARD_SIZE 80
+#define REC_SRC_NULL \
+    (Rectangle) { 0, 0, CARD_SIZE, CARD_SIZE }
+#define CARD_VOID \
+    (Card) { REC_SRC_NULL, 0 }
+
+#define FILES_PATH "src/files/saves/"
 
 enum CardValue
 {
@@ -18,20 +35,54 @@ enum CardValue
     C2048
 };
 
-// typedef struct Card
-// {
-//     // retangulo de recorte da sprite
-//     Rectangle recSrc;
-//     int value;
-// } Card;
+enum Move
+{
+    UP,
+    RIGHT,
+    DOWN,
+    LEFT,
+};
+
+enum GameSituation
+{
+    ON_GOING,
+    GAME_OVER,
+    WON
+};
+
+typedef struct Card
+{
+    Rectangle recSrc;
+    int value;
+} Card;
 
 typedef struct GameState
 {
-    int currentBoardState[BOARD_SIZE][BOARD_SIZE];
-    int oldBoardState[BOARD_SIZE][BOARD_SIZE];
+    Card *currentBoardState[BOARD_SIZE][BOARD_SIZE];
+    Card *oldBoardState[BOARD_SIZE][BOARD_SIZE];
     Texture2D cardTexture;
     int movements;
     int score;
 } GameState;
 
-GameState initGameState(int currentBoardState[BOARD_SIZE][BOARD_SIZE], Texture2D cardTexture, int movements, int score);
+typedef struct SavedGame
+{
+    bool exists;
+    Card boardState[BOARD_SIZE][BOARD_SIZE];
+    GameState gameState;
+} SavedGame;
+
+GameState initGameState(Card *currentBoardState, Texture2D cardTexture, int movements, int score);
+int moveCards(GameState *gameState, Card *gameBoard, int moveType);
+int getGameSituation(GameState *gameState, Card *gameBoard);
+bool moveCardsUp(Card *gameBoard, int *score);
+int keyToMove(int key);
+void generateRandomCard(GameState *gameState, Card *gameboard);
+void rotateBoardLeft(Card *gameBoard);
+bool boardHasEmptySlots(GameState *gameState);
+void restartGame(Card *gameBoard, GameState *gameState);
+GameState loadGame(char path[512], Card *initialBoardState);
+bool saveGame(GameState gameState, Card *boardState, char path[512]);
+void copyMatrix(Card *dest, Card *src);
+
+#endif

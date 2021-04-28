@@ -1,7 +1,11 @@
 #define TEXTURES_PATH "src/resources/textures/"
 #define SOUNDS_PATH "src/resources/audio/"
 
+#define STYLES_PATH "styles/"
+
 #define GAME_LOGO TEXTURES_PATH "logo.png"
+
+#define DRACULA_STYLE STYLES_PATH "dracula.rgs"
 
 // Game Scene
 #define BOARD_BG TEXTURES_PATH "board.png"
@@ -28,6 +32,9 @@
 #define GITHUB_ICON TEXTURES_PATH "github-icon.png"
 #define DRACULA_ICON TEXTURES_PATH "dracula-icon.png"
 #define RAYLIB_ICON TEXTURES_PATH "raylib-icon.png"
+
+//Ranking
+#define LEADERBOARD TEXTURES_PATH "leaderboard.png"
 
 #define BT_SOUND SOUNDS_PATH "buttonfx.wav"
 

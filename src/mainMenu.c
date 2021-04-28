@@ -1,27 +1,59 @@
 #include "includes/mainMenu.h"
 #include "includes/window.h"
 
-void drawMainMenu(MainMenu mainMenu)
+void drawMainMenu(MainMenu *mainMenu)
 {
     BeginDrawing();
 
     ClearBackground(BACKGROUND_COLOR);
 
-    drawButton(mainMenu.btLoadGame);
-    drawButton(mainMenu.btNewGame);
-    drawButton(mainMenu.btHighScores);
-    drawButton(mainMenu.btCredits);
-    drawButton(mainMenu.btQuit);
+    if (mainMenu->fileDialogState.fileDialogActive)
+        GuiLock();
 
-    drawElementUI(mainMenu.logo);
-  
+    drawButton(mainMenu->btNewGame);
+    drawButton(mainMenu->btLoadGame);
+    drawButton(mainMenu->btHighScores);
+    drawButton(mainMenu->btCredits);
+    drawButton(mainMenu->btQuit);
+
+    drawElementUI(mainMenu->logo);
+
+    GuiUnlock();
+    GuiFileDialog(&mainMenu->fileDialogState);
+
     EndDrawing();
 }
 
-void mainMenuBtAction(MainMenu *menuScreen, int *screenState)
+void mainMenuBtAction(MainMenu *menuScreen, int *screenState, Card *initialBoardState, GameState *gameState)
 {
-    if (buttonState(&(menuScreen->btLoadGame)) || buttonState(&(menuScreen->btNewGame)))
+    if (menuScreen->fileDialogState.SelectFilePressed)
+    {
+        if (IsFileExtension(menuScreen->fileDialogState.fileNameText, ".bin"))
+        {
+            *gameState = loadGame(TextFormat("%s/%s", menuScreen->fileDialogState.dirPathText, menuScreen->fileDialogState.fileNameText), initialBoardState);
+            *(screenState) = game;
+        }
+
+        menuScreen->fileDialogState.SelectFilePressed = false;
+        menuScreen->fileDialogState.fileDialogActive = false;
+    }
+
+    if (menuScreen->fileDialogState.fileDialogActive == true)
+    {
+        return;
+    }
+
+    if (buttonState(&(menuScreen->btLoadGame)))
+    {
+        menuScreen->fileDialogState.fileDialogActive = true;
+    }
+
+    if (buttonState(&(menuScreen->btNewGame)))
+    {
+        restartGame(initialBoardState, gameState);
         *(screenState) = game;
+    }
+
     if (buttonState(&(menuScreen->btHighScores)))
         *(screenState) = highScore;
     if (buttonState(&(menuScreen->btCredits)))
@@ -33,6 +65,8 @@ void mainMenuBtAction(MainMenu *menuScreen, int *screenState)
 MainMenu initMainMenu()
 {
     MainMenu window;
+
+    window.fileDialogState = InitGuiFileDialog(420, 310, FILES_PATH, false);
 
     window.logo = initElementUI(LoadTexture(GAME_LOGO), (Vector2){155, 62});
 

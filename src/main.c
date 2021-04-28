@@ -1,81 +1,76 @@
-#include "includes/globals.h"
+#define RAYGUI_IMPLEMENTATION
+#define GUI_FILE_DIALOG_IMPLEMENTATION
+#include <stdio.h>
+
+// Raylib
+#include "includes/raylib.h"
+#include "includes/raygui.h"
+
+// Our libraries
+#include "includes/window.h"
 #include "includes/mainMenu.h"
 #include "includes/gameScene.h"
 #include "includes/creditsScene.h"
+#include "includes/ranking.h"
+#include "includes/highScoresScene.h"
 
 int main(void)
 {
-
-    // Window initialization
-    Window window = {WINDOW_DW, WINDOW_DH, mainMenu, "C2048", true};
+    srand(time(NULL));
+    Window window = {WINDOW_DW, WINDOW_DH, mainMenu, "C2048"};
     InitWindow(window.width, window.height, window.name);
-    InitAudioDevice();
+    //InitAudioDevice();
+    SetExitKey(KEY_F4);
+    GuiLoadStyle(DRACULA_STYLE);
 
-    // GameState init
-    int initialBoardState[BOARD_SIZE][BOARD_SIZE] = {{C2, C2, C4, C8},
-                                                     {C16, C32, C64, C128},
-                                                     {C256, C512, C1024, C2048},
-                                                     {0, 0, 0, 0}};
+    Ranker rankers[10];
+    loadRankers(&rankers[0]);
 
-    GameState gameState = initGameState(initialBoardState, LoadTexture(CARDS), 0, 0);
+    Card initialBoardState[BOARD_SIZE][BOARD_SIZE] = {CARD_VOID};
 
-    // Main menu screen init
+    GameState gameState = initGameState(&initialBoardState[0][0], LoadTexture(CARDS), 0, 0);
+
     MainMenu menuScreen = initMainMenu();
 
-    // GameScene screen init
     GameScene gameScreen = initGameScene();
 
-    // CreditsScene screen init
     CreditsScene creditsScreen = initCreditsScene();
 
-    SetTargetFPS(60);
-    // Main Scene loop
-    while (!WindowShouldClose()) // Detect window close button or ESC key
-    {
+    HighScoresScene highScoresScene = initHighScores();
 
+    SetTargetFPS(60);
+
+    while (!WindowShouldClose()) // Detect window close button or F4 key
+    {
         switch (window.screenState)
         {
         case mainMenu:
-            // Buttons controll
-            mainMenuBtAction(&menuScreen, &(window.screenState));
-            drawMainMenu(menuScreen);
+            mainMenuBtAction(&menuScreen, &(window.screenState), &initialBoardState[0][0], &gameState);
+            drawMainMenu(&menuScreen);
             break;
         case game:
-            gameSceneAction(&gameScreen, &(window.screenState), &gameState);
-            drawGameScene(gameScreen, gameState);
+            gameSceneAction(&gameScreen, &(window.screenState), &gameState, &initialBoardState[0][0], &rankers);
+            drawGameScene(&gameScreen, gameState, rankers, N_MAX_RANKERS);
             break;
         case highScore:
-            BeginDrawing();
-
-            ClearBackground(RAYWHITE);
-
-            DrawText("HighScoreWindow", 190, 200, 20, LIGHTGRAY);
-
-            EndDrawing();
+            highScoresSceneAction(&highScoresScene, &(window.screenState));
+            drawHighScoresScene(highScoresScene, rankers, N_MAX_RANKERS);
             break;
         case credits:
             creditsSceneAction(&creditsScreen, &(window.screenState));
             drawCreditsScene(creditsScreen);
             break;
         case quit:
-            deInitMainMenu(&menuScreen);
-            deInitGameScene(&gameScreen);
-            deInitCreditsScene(&creditsScreen);
-            CloseAudioDevice();
-            CloseWindow();
-            return 0;
-            break;
-        default:
-            break;
+            goto end;
         }
     }
-
+end:
     // De-init stuff
     deInitMainMenu(&menuScreen);
     deInitGameScene(&gameScreen);
     deInitCreditsScene(&creditsScreen);
-    // Close window and OpenGL context
-    CloseAudioDevice();
+    deInitHighScores(&highScoresScene);
+    //CloseAudioDevice();
     CloseWindow();
 
     return 0;

@@ -7,6 +7,9 @@
 # Libraries
 *.lib
 
+#binaries 
+**/*.bin
+
 # Executables
 *.exe
 *.out
