@@ -69,10 +69,10 @@ bool moveCardsUp(Card *gameBoard, int *score)
     return isValidMove;
 }
 
-bool moveCards(GameState *gameState, Card *gameBoard, int moveType)
+int moveCards(GameState *gameState, Card *gameBoard, int moveType)
 {
     if (moveType < 0)
-        return false;
+        return ON_GOING;
 
     bool isValidMove = false;
 
@@ -93,7 +93,13 @@ bool moveCards(GameState *gameState, Card *gameBoard, int moveType)
         *gameState = initGameState(gameBoard, gameState->cardTexture, gameState->movements, gameState->score);
         generateRandomCard(gameState, gameBoard);
     }
-    return isValidMove;
+    return getGameSituation(gameState, gameBoard);
+}
+
+int getGameSituation(GameState *gameState, Card *gameBoard)
+{
+    // TODO: implement logic to check whether the game is on going or over, and than if the player won or lost
+    return ON_GOING;
 }
 
 int keyToMove(int key)

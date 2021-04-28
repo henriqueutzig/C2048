@@ -13,8 +13,10 @@
 
 #define BOARD_SIZE 4
 #define CARD_SIZE 80
-#define REC_SRC_NULL (Rectangle) { 0, 0, CARD_SIZE, CARD_SIZE }
-#define CARD_VOID (Card) { REC_SRC_NULL, 0 }
+#define REC_SRC_NULL \
+    (Rectangle) { 0, 0, CARD_SIZE, CARD_SIZE }
+#define CARD_VOID \
+    (Card) { REC_SRC_NULL, 0 }
 
 #define FILES_PATH "src/files/saves/"
 
@@ -33,12 +35,19 @@ enum CardValue
     C2048
 };
 
-enum move
+enum Move
 {
     UP,
     RIGHT,
     DOWN,
     LEFT,
+};
+
+enum GameSituation
+{
+    ON_GOING,
+    GAME_OVER,
+    WON
 };
 
 typedef struct Card
@@ -64,7 +73,8 @@ typedef struct SavedGame
 } SavedGame;
 
 GameState initGameState(Card *currentBoardState, Texture2D cardTexture, int movements, int score);
-bool moveCards(GameState *gameState, Card *gameBoard, int moveType);
+int moveCards(GameState *gameState, Card *gameBoard, int moveType);
+int getGameSituation(GameState *gameState, Card *gameBoard);
 bool moveCardsUp(Card *gameBoard, int *score);
 int keyToMove(int key);
 void generateRandomCard(GameState *gameState, Card *gameboard);

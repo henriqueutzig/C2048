@@ -67,7 +67,7 @@ void drawGameScene(GameScene *gameScene, GameState gameState, Ranker rank[N_MAX_
 
     ClearBackground(BACKGROUND_COLOR);
 
-    if (gameScene->saveGameDialog.isActive || gameScene->newGameDialog.isActive || gameScene->quitGameDialog.isActive)
+    if (gameScene->saveGameDialog.isActive || gameScene->newGameDialog.isActive || gameScene->quitGameDialog.isActive || gameScene->endGameDialog.isActive)
         GuiLock();
 
     DrawTexture(gameScene->board.texture, gameScene->board.pos.x, gameScene->board.pos.y, WHITE);
@@ -101,18 +101,23 @@ void drawGameScene(GameScene *gameScene, GameState gameState, Ranker rank[N_MAX_
         DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), Fade(BACKGROUND_COLOR, 0.85f));
         gameScene->saveGameDialog.buttonPressed = GuiTextInputBox((Rectangle){WINDOW_DW / 2 - 100, WINDOW_DH / 2 - 50, 200, 125}, "Save file", "Insert the name of the save", "SAVE;CANCEL", gameScene->saveFileName);
     }
+    else if (gameScene->endGameDialog.isActive)
+    {
+        DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), Fade(BACKGROUND_COLOR, 0.85f));
+        // TODO: a way to limit the user only NAME_SIZE in input
+        gameScene->endGameDialog.buttonPressed = GuiTextInputBox((Rectangle){WINDOW_DW / 2 - 100, WINDOW_DH / 2 - 50, 220, 140}, gameScene->gameSituation == WON ? WIN_MESSAGE : GAME_OVER_MESSAGE, "Insert your name for the leaderboad", "SAVE;NAH", gameScene->rankingName);
+    }
 
     EndDrawing();
 }
 
 void gameSceneAction(GameScene *gameScene, int *screenState, GameState *gameState, Card *gameBoard)
 {
-    if (gameScene->saveGameDialog.isActive || gameScene->newGameDialog.isActive || gameScene->quitGameDialog.isActive)
+    if (gameScene->saveGameDialog.isActive || gameScene->newGameDialog.isActive || gameScene->quitGameDialog.isActive || gameScene->endGameDialog.isActive)
     {
-        if (gameScene->newGameDialog.buttonPressed == -1 || gameScene->saveGameDialog.buttonPressed == -1 || gameScene->quitGameDialog.buttonPressed == -1)
-        {
+        if (gameScene->newGameDialog.buttonPressed == -1 || gameScene->saveGameDialog.buttonPressed == -1 || gameScene->quitGameDialog.buttonPressed == -1 || gameScene->endGameDialog.buttonPressed == -1)
             return;
-        }
+
         if (gameScene->saveGameDialog.buttonPressed == YES)
         {
             gameScene->saveGameDialog.buttonPressed = NO;
@@ -131,8 +136,21 @@ void gameSceneAction(GameScene *gameScene, int *screenState, GameState *gameStat
             gameScene->quitGameDialog.isActive = false;
             *screenState = mainMenu;
         }
+        else if (gameScene->endGameDialog.buttonPressed == YES)
+        {
+            gameScene->endGameDialog.buttonPressed = NO;
+            gameScene->endGameDialog.isActive = false;
+            *screenState = highScore;
+        }
+        // No way to check if the user closed the dialog
+        else if (gameScene->endGameDialog.buttonPressed == NO)
+        {
+            gameScene->endGameDialog.isActive = false;
+            *screenState = highScore;
+        }
         else
         {
+            gameScene->endGameDialog.isActive = false;
             gameScene->saveGameDialog.isActive = false;
             gameScene->newGameDialog.isActive = false;
             gameScene->quitGameDialog.isActive = false;
@@ -151,7 +169,9 @@ void gameSceneAction(GameScene *gameScene, int *screenState, GameState *gameStat
     case KEY_DOWN:
     case KEY_LEFT:
     case KEY_RIGHT:
-        moveCards(gameState, gameBoard, keyToMove(keyPressed));
+        gameScene->gameSituation = moveCards(gameState, gameBoard, keyToMove(keyPressed));
+        if (gameScene->gameSituation != ON_GOING)
+            gameScene->endGameDialog.isActive = true;
         break;
 
     case KEY_S:
@@ -186,8 +206,11 @@ GameScene initGameScene()
     window.newGameDialog = initDialogState();
     window.saveGameDialog = initDialogState();
     window.quitGameDialog = initDialogState();
+    window.endGameDialog = initDialogState();
 
+    window.gameSituation = ON_GOING;
     window.saveFileName[0] = '\0';
+    window.rankingName[0] = '\0';
 
     return window;
 }

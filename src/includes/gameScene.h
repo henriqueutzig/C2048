@@ -17,6 +17,9 @@
 #define MEDAL_SIZE_W 12
 #define MEDAL_SIZE_H 15
 
+#define WIN_MESSAGE "YOU WON"
+#define GAME_OVER_MESSAGE "GAME OVER"
+
 enum MedalNumber
 {
     GOLD_MEDAL,
@@ -51,7 +54,10 @@ typedef struct GameScene
     DialogState newGameDialog;
     DialogState saveGameDialog;
     DialogState quitGameDialog;
+    DialogState endGameDialog;
     char saveFileName[512];
+    char rankingName[NAME_SIZE];
+    int gameSituation;
 } GameScene;
 
 void drawBoardCards(GameState gameState, ElementUI board);
