@@ -39,9 +39,11 @@ int main(void)
     HighScoresScene highScoresScene = initHighScores();
 
     SetTargetFPS(60);
+    bool windowShouldClose = false;
 
-    while (!WindowShouldClose()) // Detect window close button or F4 key
+    while (!windowShouldClose) // Detect window close button or F4 key
     {
+        windowShouldClose = WindowShouldClose();
         switch (window.screenState)
         {
         case mainMenu:
@@ -61,10 +63,10 @@ int main(void)
             drawCreditsScene(creditsScreen);
             break;
         case quit:
-            goto end;
+            windowShouldClose = true;
+            break;
         }
     }
-end:
     // De-init stuff
     deInitMainMenu(&menuScreen);
     deInitGameScene(&gameScreen);
