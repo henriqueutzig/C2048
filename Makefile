@@ -19,7 +19,7 @@ else
 	UNAME_S := $(shell uname -s)
     ifeq ($(UNAME_S),Linux)
 		LIBFOLDER = -L $(SRCDIR)/libs/linux/
-        LDFLAGS = -lraylib -lGL  -lm -pthread -ldl -lX11 
+        LDFLAGS = -lraylib -lm -pthread -ldl 
     endif
 endif
 
