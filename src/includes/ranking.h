@@ -22,7 +22,7 @@
 
 /* Exported constants --------------------------------------------------------*/
 
-#define HIGHSCORE_PATH "src/files/saves/highscores.txt"
+#define HIGHSCORE_PATH "src/files/highscores/highscores.txt"
 
 #define NAME_SIZE 9
 #define N_MAX_RANKERS 10
