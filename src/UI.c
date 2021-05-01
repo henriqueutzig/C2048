@@ -19,7 +19,7 @@ void deinitElementUI(ElementUI *elementUI)
     UnloadTexture(elementUI->texture);
 }
 
-Rectangle getRectSpriteFromMatrix(int value, int column, int row, int width, int height)
+Rectangle getRectFrameFromMatrix(int value, int column, int row, int width, int height)
 {
     int count = 0;
 
@@ -37,7 +37,7 @@ Rectangle getRectSpriteFromMatrix(int value, int column, int row, int width, int
     return (Rectangle){0, 0, width, height};
 }
 
-Rectangle getRectSpriteFromArray(int value, int width, int height)
+Rectangle getRectFrameFromArray(int value, int width, int height)
 {
     return (Rectangle){0, value * height, width, height};
 }

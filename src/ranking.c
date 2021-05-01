@@ -33,17 +33,14 @@ bool loadRankers(Ranker *rankers)
     return true;
 }
 
-bool saveNewRanker(Ranker *arrRankers, Ranker newRanker)
+void saveNewRanker(Ranker *arrRankers, Ranker newRanker)
 {
-    bool rewriteHighScores = false;
     if (newRanker.score > (arrRankers + N_MAX_RANKERS - 1)->score)
     {
         *(arrRankers + N_MAX_RANKERS - 1) = newRanker;
         sortRankers(arrRankers);
         updateHighScoresFile(arrRankers);
     }
-
-    return rewriteHighScores;
 }
 
 void sortRankers(Ranker *arrRankers)
@@ -59,7 +56,7 @@ void sortRankers(Ranker *arrRankers)
     }
 }
 
-int updateHighScoresFile(Ranker *arrRankers)
+bool updateHighScoresFile(Ranker *arrRankers)
 {
     FILE *file = fopen(HIGHSCORE_PATH, "w");
     if (file == NULL)
@@ -75,5 +72,7 @@ int updateHighScoresFile(Ranker *arrRankers)
             fputc('\n', file);
     }
     fflush(file);
-    return fclose(file);
+    fclose(file);
+
+    return true;
 }

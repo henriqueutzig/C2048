@@ -27,20 +27,26 @@ void drawRankingBlock(ElementUI rankingBlockUI, ElementUI medal, Ranker rank[N_M
             continue;
         }
 
-        DrawText(TextFormat("%s", rank[i].name), posX, posY, rankingBlockUI.fontSize, rankingBlockUI.color);
-        DrawText(TextFormat("%05d", rank[i].score), posX + SCORE_X_OFFSET, posY, rankingBlockUI.fontSize, rankingBlockUI.color);
         switch (i)
         {
         case 0:
             DrawText(TextFormat("%s", rank[i].name), posX, posY, rankingBlockUI.fontSize, DRACULA_YELLOW);
             DrawText(TextFormat("%06d", rank[i].score), posX + SCORE_X_OFFSET, posY, rankingBlockUI.fontSize, DRACULA_YELLOW);
-            DrawTextureRec(medal.texture, getRectSpriteFromArray(GOLD_MEDAL, MEDAL_SIZE_W, MEDAL_SIZE_H), (Vector2){posX + MEDAL_X_OFFSET, posY + 3}, WHITE);
+            DrawTextureRec(medal.texture, getRectFrameFromArray(GOLD_MEDAL, MEDAL_SIZE_W, MEDAL_SIZE_H), (Vector2){posX + MEDAL_X_OFFSET, posY + 3}, WHITE);
             break;
         case 1:
-            DrawTextureRec(medal.texture, getRectSpriteFromArray(SILVER_MEDAL, MEDAL_SIZE_W, MEDAL_SIZE_H), (Vector2){posX + MEDAL_X_OFFSET, posY + 3}, WHITE);
+            DrawText(TextFormat("%s", rank[i].name), posX, posY, rankingBlockUI.fontSize, rankingBlockUI.color);
+            DrawText(TextFormat("%05d", rank[i].score), posX + SCORE_X_OFFSET, posY, rankingBlockUI.fontSize, rankingBlockUI.color);
+            DrawTextureRec(medal.texture, getRectFrameFromArray(SILVER_MEDAL, MEDAL_SIZE_W, MEDAL_SIZE_H), (Vector2){posX + MEDAL_X_OFFSET, posY + 3}, WHITE);
             break;
         case 2:
-            DrawTextureRec(medal.texture, getRectSpriteFromArray(BRONZE_MEDAL, MEDAL_SIZE_W, MEDAL_SIZE_H), (Vector2){posX + MEDAL_X_OFFSET, posY + 3}, WHITE);
+            DrawText(TextFormat("%s", rank[i].name), posX, posY, rankingBlockUI.fontSize, rankingBlockUI.color);
+            DrawText(TextFormat("%05d", rank[i].score), posX + SCORE_X_OFFSET, posY, rankingBlockUI.fontSize, rankingBlockUI.color);
+            DrawTextureRec(medal.texture, getRectFrameFromArray(BRONZE_MEDAL, MEDAL_SIZE_W, MEDAL_SIZE_H), (Vector2){posX + MEDAL_X_OFFSET, posY + 3}, WHITE);
+            break;
+        default:
+            DrawText(TextFormat("%s", rank[i].name), posX, posY, rankingBlockUI.fontSize, rankingBlockUI.color);
+            DrawText(TextFormat("%05d", rank[i].score), posX + SCORE_X_OFFSET, posY, rankingBlockUI.fontSize, rankingBlockUI.color);
             break;
         }
     }
@@ -61,7 +67,7 @@ void drawBoardCards(GameState gameState, ElementUI board)
     }
 }
 
-void drawGameScene(GameScene *gameScene, GameState gameState, Ranker rank[N_MAX_RANKERS], int nHS)
+void drawGameScene(GameScene *gameScene, GameState gameState, Ranker rank[N_MAX_RANKERS], int rankSize)
 {
     BeginDrawing();
 
@@ -76,7 +82,7 @@ void drawGameScene(GameScene *gameScene, GameState gameState, Ranker rank[N_MAX_
 
     drawScoreBlock(gameScene->scoreBlock, gameState.score);
     drawMovementBlock(gameScene->movementBlock, gameState.movements);
-    drawRankingBlock(gameScene->rankingBlock, gameScene->medal, rank, nHS);
+    drawRankingBlock(gameScene->rankingBlock, gameScene->medal, rank, rankSize);
 
     drawElementUI(gameScene->quitKey);
     drawElementUI(gameScene->newGameKey);
@@ -110,47 +116,47 @@ void drawGameScene(GameScene *gameScene, GameState gameState, Ranker rank[N_MAX_
     EndDrawing();
 }
 
-void gameSceneAction(GameScene *gameScene, int *screenState, GameState *gameState, Card *gameBoard, Ranker *rank)
+void gameSceneAction(GameScene *gameScene, ScreenState *screenState, GameState *gameState, Card *gameBoard, Ranker *rank)
 {
     if (gameScene->saveGameDialog.isActive || gameScene->newGameDialog.isActive || gameScene->quitGameDialog.isActive || gameScene->endGameDialog.isActive)
     {
-        if (gameScene->newGameDialog.buttonPressed == -1 || gameScene->saveGameDialog.buttonPressed == -1 || gameScene->quitGameDialog.buttonPressed == -1 || gameScene->endGameDialog.buttonPressed == -1)
+        if (gameScene->newGameDialog.buttonPressed == QUIT || gameScene->saveGameDialog.buttonPressed == QUIT || gameScene->quitGameDialog.buttonPressed == QUIT || gameScene->endGameDialog.buttonPressed == QUIT)
             return;
 
         if (gameScene->saveGameDialog.buttonPressed == YES)
         {
-            gameScene->saveGameDialog.buttonPressed = 0;
+            gameScene->saveGameDialog.buttonPressed = NONE;
             gameScene->saveGameDialog.isActive = false;
             saveGame(*gameState, gameBoard, TextFormat("%s/%s%s", FILES_PATH, gameScene->saveFileName, ".bin"));
         }
         else if (gameScene->newGameDialog.buttonPressed == YES)
         {
-            gameScene->newGameDialog.buttonPressed = 0;
+            gameScene->newGameDialog.buttonPressed = NONE;
             gameScene->newGameDialog.isActive = false;
             restartGame(gameBoard, gameState);
         }
         else if (gameScene->quitGameDialog.buttonPressed == YES)
         {
-            gameScene->quitGameDialog.buttonPressed = 0;
+            gameScene->quitGameDialog.buttonPressed = NONE;
             gameScene->quitGameDialog.isActive = false;
-            *screenState = mainMenu;
+            *screenState = MENU_SCENE;
         }
         else if (gameScene->endGameDialog.buttonPressed == YES)
         {
-            gameScene->endGameDialog.buttonPressed = 0;
+            gameScene->endGameDialog.buttonPressed = NONE;
             gameScene->endGameDialog.isActive = false;
             Ranker newRanker;
             newRanker.score = gameState->score;
             strcpy(newRanker.name, gameScene->rankingName);
 
             saveNewRanker(rank, newRanker);
-            *screenState = highScore;
+            *screenState = HIGH_SCORE_SCENE;
         }
         else if (gameScene->endGameDialog.buttonPressed == NO)
         {
-            gameScene->endGameDialog.buttonPressed = 0;
+            gameScene->endGameDialog.buttonPressed = NONE;
             gameScene->endGameDialog.isActive = false;
-            *screenState = highScore;
+            *screenState = HIGH_SCORE_SCENE;
         }
         else
         {
@@ -162,8 +168,8 @@ void gameSceneAction(GameScene *gameScene, int *screenState, GameState *gameStat
         return;
     }
 
-    if (buttonState(&(gameScene->btBackToMenu)))
-        *screenState = mainMenu;
+    if (updateButtonState(&(gameScene->btBackToMenu)))
+        *screenState = MENU_SCENE;
 
     int keyPressed = GetKeyPressed();
 
@@ -192,39 +198,36 @@ void gameSceneAction(GameScene *gameScene, int *screenState, GameState *gameStat
 
 GameScene initGameScene()
 {
-    GameScene window;
-    window.board = initElementUI(LoadTexture(BOARD_BG), (Vector2){18, 40});
-    window.movementBlock = initElementTextUI(LoadTexture(MOVEMENT_BLOCK), (Vector2){436, 40}, WHITE, 18);
-    window.scoreBlock = initElementTextUI(LoadTexture(SCORE_BLOCK), (Vector2){555, 40}, DRACULA_YELLOW, 18);
-    window.rankingBlock = initElementTextUI(LoadTexture(RANKING_BLOCK), (Vector2){436, 109}, WHITE, 16);
+    GameScene gameScene;
+    gameScene.board = initElementUI(LoadTexture(BOARD_BG), (Vector2){18, 40});
+    gameScene.movementBlock = initElementTextUI(LoadTexture(MOVEMENT_BLOCK), (Vector2){436, 40}, WHITE, 18);
+    gameScene.scoreBlock = initElementTextUI(LoadTexture(SCORE_BLOCK), (Vector2){555, 40}, DRACULA_YELLOW, 18);
+    gameScene.rankingBlock = initElementTextUI(LoadTexture(RANKING_BLOCK), (Vector2){436, 109}, WHITE, 16);
 
-    window.quitKey = initElementUI(LoadTexture(QUIT_KEY), (Vector2){436, 343});
-    window.newGameKey = initElementUI(LoadTexture(NEW_GAME_KEY), (Vector2){436, 379});
-    window.saveKey = initElementUI(LoadTexture(SAVE_KEY), (Vector2){436, 415});
-    window.movementsKey = initElementUI(LoadTexture(MOVEMENTS_KEY), (Vector2){539, 349});
+    gameScene.quitKey = initElementUI(LoadTexture(QUIT_KEY), (Vector2){436, 343});
+    gameScene.newGameKey = initElementUI(LoadTexture(NEW_GAME_KEY), (Vector2){436, 379});
+    gameScene.saveKey = initElementUI(LoadTexture(SAVE_KEY), (Vector2){436, 415});
+    gameScene.movementsKey = initElementUI(LoadTexture(MOVEMENTS_KEY), (Vector2){539, 349});
 
-    window.medal = initElementUI(LoadTexture(MEDAL_SMALL), (Vector2){0, 0});
+    gameScene.medal = initElementUI(LoadTexture(MEDAL_SMALL), (Vector2){0, 0});
 
-    window.btBackToMenu = initButton(LoadTexture(BT_BACK), 1, LoadSound(BT_SOUND), (Vector2){20, 10});
+    gameScene.btBackToMenu = initButton(LoadTexture(BT_BACK), 1, LoadSound(BT_SOUND), (Vector2){20, 10});
 
-    window.newGameDialog = initDialogState();
-    window.saveGameDialog = initDialogState();
-    window.quitGameDialog = initDialogState();
-    window.endGameDialog = initDialogState();
+    gameScene.newGameDialog = initDialogState();
+    gameScene.saveGameDialog = initDialogState();
+    gameScene.quitGameDialog = initDialogState();
+    gameScene.endGameDialog = initDialogState();
 
-    window.gameSituation = ON_GOING;
-    window.saveFileName[0] = '\0';
-    window.rankingName[0] = '\0';
+    gameScene.gameSituation = ON_GOING;
+    gameScene.saveFileName[0] = '\0';
+    gameScene.rankingName[0] = '\0';
 
-    return window;
+    return gameScene;
 }
 
 DialogState initDialogState()
 {
-    DialogState dialogState;
-    dialogState.buttonPressed = 0;
-    dialogState.isActive = false;
-    return dialogState;
+    return (DialogState){NONE, false};
 }
 
 void deInitGameScene(GameScene *gameScene)

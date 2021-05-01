@@ -2,10 +2,7 @@
 
 GameState initGameState(Card *currentBoardState, Texture2D cardTexture, int movements, int score)
 {
-    GameState gameState = (GameState){.oldBoardState = {NULL}};
-    gameState.cardTexture = cardTexture;
-    gameState.movements = movements;
-    gameState.score = score;
+    GameState gameState = (GameState){.cardTexture = cardTexture, .movements = movements, .score = score};
     for (int i = 0; i < BOARD_SIZE; i++)
         for (int j = 0; j < BOARD_SIZE; j++)
             gameState.currentBoardState[i][j] = (currentBoardState + i * BOARD_SIZE + j)->value == 0 ? NULL : (currentBoardState + i * BOARD_SIZE + j);
@@ -19,12 +16,12 @@ void deslocateCards(Card *gameBoard, int currentRow, int column)
     {
         Card *currentCard = (gameBoard + r * BOARD_SIZE + column);
         currentCard->value = (currentCard + BOARD_SIZE)->value;
-        currentCard->recSrc = getRectSpriteFromMatrix(currentCard->value, 3, 4, CARD_SIZE, CARD_SIZE);
+        currentCard->recSrc = getRectFrameFromMatrix(currentCard->value, 3, 4, CARD_SIZE, CARD_SIZE);
     }
     *(gameBoard + (BOARD_SIZE - 1) * BOARD_SIZE + column) = CARD_VOID;
 }
 
-bool checkZerosInColumn(Card *gameBoard, int currentRow, int column)
+bool checkNonZerosBelowRow(Card *gameBoard, int currentRow, int column)
 {
     for (int r = currentRow + 1; r < BOARD_SIZE; r++)
         if ((gameBoard + r * BOARD_SIZE + column)->value != 0)
@@ -42,7 +39,7 @@ bool moveCardsUp(Card *gameBoard, int *score)
         {
             if ((gameBoard + r * BOARD_SIZE + c)->value == 0)
             {
-                if (checkZerosInColumn(gameBoard, r, c))
+                if (checkNonZerosBelowRow(gameBoard, r, c))
                 {
                     deslocateCards(gameBoard, r, c);
                     isValidMove = true;
@@ -58,7 +55,7 @@ bool moveCardsUp(Card *gameBoard, int *score)
             if (currentCard->value == (currentCard + BOARD_SIZE)->value)
             {
                 currentCard->value++;
-                currentCard->recSrc = getRectSpriteFromMatrix(currentCard->value, 3, 4, CARD_SIZE, CARD_SIZE);
+                currentCard->recSrc = getRectFrameFromMatrix(currentCard->value, 3, 4, CARD_SIZE, CARD_SIZE);
                 *score += pow(2, currentCard->value);
                 deslocateCards(gameBoard, r + 1, c);
                 isValidMove = true;
@@ -69,14 +66,13 @@ bool moveCardsUp(Card *gameBoard, int *score)
     return isValidMove;
 }
 
-int moveCards(GameState *gameState, Card *gameBoard, int moveType)
+GameSituation moveCards(GameState *gameState, Card *gameBoard, Move moveType)
 {
-    if (moveType < 0)
-        return ON_GOING;
-
     bool isValidMove = false;
 
-    if (moveType > 0)
+    if (moveType == UP)
+        isValidMove = moveCardsUp(gameBoard, &gameState->score);
+    else
     {
         for (int i = 0; i < moveType; i++)
             rotateBoardLeft(gameBoard);
@@ -84,8 +80,6 @@ int moveCards(GameState *gameState, Card *gameBoard, int moveType)
         for (int i = 0, n = (4 - moveType); i < n; i++)
             rotateBoardLeft(gameBoard);
     }
-    else
-        isValidMove = moveCardsUp(gameBoard, &gameState->score);
 
     if (isValidMove)
     {
@@ -96,7 +90,7 @@ int moveCards(GameState *gameState, Card *gameBoard, int moveType)
     return getGameSituation(gameState, gameBoard);
 }
 
-int getGameSituation(GameState *gameState, Card *gameBoard)
+GameSituation getGameSituation(GameState *gameState, Card *gameBoard)
 {
     Card auxBoard[BOARD_SIZE][BOARD_SIZE];
 
@@ -127,7 +121,7 @@ int getGameSituation(GameState *gameState, Card *gameBoard)
     return validMoves ? ON_GOING : GAME_OVER;
 }
 
-int keyToMove(int key)
+Move keyToMove(int key)
 {
     switch (key)
     {
@@ -180,7 +174,7 @@ void generateRandomCard(GameState *gameState, Card *gameBoard)
     } while ((*(gameState->currentBoardState[0] + y * BOARD_SIZE + x) != NULL));
 
     int newCardEnum = (1 + (rand() % (10 - 1 + 1))) > 9 ? C4 : C2;
-    Card newCard = {getRectSpriteFromMatrix(newCardEnum, 3, 4, CARD_SIZE, CARD_SIZE), newCardEnum};
+    Card newCard = {getRectFrameFromMatrix(newCardEnum, 3, 4, CARD_SIZE, CARD_SIZE), newCardEnum};
 
     *(gameBoard + y * BOARD_SIZE + x) = newCard;
     *(gameState->currentBoardState[0] + y * BOARD_SIZE + x) = (gameBoard + y * BOARD_SIZE + x);
@@ -190,7 +184,7 @@ void restartGame(Card *gameBoard, GameState *gameState)
 {
     Card boardEmpty[BOARD_SIZE][BOARD_SIZE] = {CARD_VOID};
 
-    copyMatrix(gameBoard, &boardEmpty[0][0]);
+    copyCardMatrix(gameBoard, &boardEmpty[0][0]);
     *gameState = initGameState(gameBoard, gameState->cardTexture, 0, 0);
     for (int i = 0; i < 2; i++)
         generateRandomCard(gameState, gameBoard);
@@ -211,12 +205,12 @@ GameState loadGame(char path[512], Card *initialBoardState)
 
     data.exists = true;
 
-    copyMatrix(initialBoardState, &data.boardState[0][0]);
+    copyCardMatrix(initialBoardState, &data.boardState[0][0]);
 
     return initGameState(initialBoardState, data.gameState.cardTexture, data.gameState.movements, data.gameState.score);
 }
 
-bool saveGame(GameState gameState, Card *boardState, char path[512])
+void saveGame(GameState gameState, Card *gameBoard, char path[MAX_FILE_PATH])
 {
     FILE *saveFile = fopen(path, "wb+");
     SavedGame data;
@@ -224,22 +218,20 @@ bool saveGame(GameState gameState, Card *boardState, char path[512])
     if (saveFile == NULL)
     {
         fprintf(stderr, "\nErro ao abrir o arquivo\n");
-        return false;
+        return;
     }
 
     data.exists = true;
     data.gameState = gameState;
 
-    copyMatrix(&data.boardState[0][0], boardState);
+    copyCardMatrix(&data.boardState[0][0], gameBoard);
 
     fwrite(&data, sizeof(SavedGame), 1, saveFile);
     fflush(saveFile);
     fclose(saveFile);
-
-    return true;
 }
 
-void copyMatrix(Card *dest, Card *src)
+void copyCardMatrix(Card *dest, Card *src)
 {
     for (int r = 0; r < BOARD_SIZE; r++)
         for (int c = 0; c < BOARD_SIZE; c++)

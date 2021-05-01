@@ -8,7 +8,7 @@
 
 // Our libraries
 #include "includes/window.h"
-#include "includes/mainMenu.h"
+#include "includes/menuScene.h"
 #include "includes/gameScene.h"
 #include "includes/creditsScene.h"
 #include "includes/ranking.h"
@@ -17,24 +17,24 @@
 int main(void)
 {
     srand(time(NULL));
-    Window window = {WINDOW_DW, WINDOW_DH, mainMenu, "C2048"};
+    Window window = (Window){WINDOW_DW, WINDOW_DH, MENU_SCENE, "C2048"};
     InitWindow(window.width, window.height, window.name);
     //InitAudioDevice();
     SetExitKey(KEY_F4);
     GuiLoadStyle(DRACULA_STYLE);
 
-    Ranker rankers[10];
+    Ranker rankers[N_MAX_RANKERS];
     loadRankers(&rankers[0]);
 
     Card initialBoardState[BOARD_SIZE][BOARD_SIZE] = {CARD_VOID};
 
     GameState gameState = initGameState(&initialBoardState[0][0], LoadTexture(CARDS), 0, 0);
 
-    MainMenu menuScreen = initMainMenu();
+    MenuScene menuScene = initMainMenu();
 
-    GameScene gameScreen = initGameScene();
+    GameScene gameScene = initGameScene();
 
-    CreditsScene creditsScreen = initCreditsScene();
+    CreditsScene creditsScene = initCreditsScene();
 
     HighScoresScene highScoresScene = initHighScores();
 
@@ -46,31 +46,31 @@ int main(void)
         windowShouldClose = WindowShouldClose();
         switch (window.screenState)
         {
-        case mainMenu:
-            mainMenuBtAction(&menuScreen, &(window.screenState), &initialBoardState[0][0], &gameState);
-            drawMainMenu(&menuScreen);
+        case MENU_SCENE:
+            mainMenuBtAction(&menuScene, &(window.screenState), &initialBoardState[0][0], &gameState);
+            drawMainMenu(&menuScene);
             break;
-        case game:
-            gameSceneAction(&gameScreen, &(window.screenState), &gameState, &initialBoardState[0][0], &rankers);
-            drawGameScene(&gameScreen, gameState, rankers, N_MAX_RANKERS);
+        case GAME_SCENE:
+            gameSceneAction(&gameScene, &(window.screenState), &gameState, &initialBoardState[0][0], &rankers[0]);
+            drawGameScene(&gameScene, gameState, rankers, N_MAX_RANKERS);
             break;
-        case highScore:
+        case HIGH_SCORE_SCENE:
             highScoresSceneAction(&highScoresScene, &(window.screenState));
             drawHighScoresScene(highScoresScene, rankers, N_MAX_RANKERS);
             break;
-        case credits:
-            creditsSceneAction(&creditsScreen, &(window.screenState));
-            drawCreditsScene(creditsScreen);
+        case CREDITS_SCENE:
+            creditsSceneAction(&creditsScene, &(window.screenState));
+            drawCreditsScene(creditsScene);
             break;
-        case quit:
+        case QUIT_GAME:
             windowShouldClose = true;
             break;
         }
     }
     // De-init stuff
-    deInitMainMenu(&menuScreen);
-    deInitGameScene(&gameScreen);
-    deInitCreditsScene(&creditsScreen);
+    deInitMainMenu(&menuScene);
+    deInitGameScene(&gameScene);
+    deInitCreditsScene(&creditsScene);
     deInitHighScores(&highScoresScene);
     //CloseAudioDevice();
     CloseWindow();

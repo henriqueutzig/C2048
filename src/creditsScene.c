@@ -19,33 +19,33 @@ void drawCreditsScene(CreditsScene creditsScene)
     EndDrawing();
 }
 
-void creditsSceneAction(CreditsScene *creditsScene, int *screenState)
+void creditsSceneAction(CreditsScene *creditsScene, ScreenState *screenState)
 {
-    if (buttonState(&(creditsScene->btMainMenu)))
-        *screenState = mainMenu;
-    if (buttonState(&(creditsScene->btColorPallet)))
+    if (updateButtonState(&(creditsScene->btMainMenu)))
+        *screenState = MENU_SCENE;
+    if (updateButtonState(&(creditsScene->btColorPallet)))
         OpenURL(URL_COLOR_PALLET);
-    if (buttonState(&(creditsScene->btGitPage)))
+    if (updateButtonState(&(creditsScene->btGitPage)))
         OpenURL(URL_GIT_GAME);
-    if (buttonState(&(creditsScene->btRaylib)))
+    if (updateButtonState(&(creditsScene->btRaylib)))
         OpenURL(URL_RAYLIB);
 }
 
 CreditsScene initCreditsScene()
 {
-    CreditsScene credits;
-    strcpy(credits.text, DEFAULT_TEXT);
-    credits.btColorPallet = initButton(LoadTexture(DRACULA_ICON), 1, LoadSound(BT_SOUND),
+    CreditsScene creditsScene;
+    strcpy(creditsScene.text, DEFAULT_TEXT);
+    creditsScene.btColorPallet = initButton(LoadTexture(DRACULA_ICON), 1, LoadSound(BT_SOUND),
                                        (Vector2){144, 247});
-    credits.btRaylib = initButton(LoadTexture(RAYLIB_ICON), 1, LoadSound(BT_SOUND),
+    creditsScene.btRaylib = initButton(LoadTexture(RAYLIB_ICON), 1, LoadSound(BT_SOUND),
                                     (Vector2){273, 247});
-    credits.btGitPage = initButton(LoadTexture(GITHUB_ICON), 1, LoadSound(BT_SOUND),
+    creditsScene.btGitPage = initButton(LoadTexture(GITHUB_ICON), 1, LoadSound(BT_SOUND),
                                    (Vector2){402, 247});
 
-    credits.btMainMenu = initButton(LoadTexture(BT_BACK), 1, LoadSound(BT_SOUND),
+    creditsScene.btMainMenu = initButton(LoadTexture(BT_BACK), 1, LoadSound(BT_SOUND),
                                     (Vector2){20, 20});
 
-    return credits;
+    return creditsScene;
 }
 
 void deInitCreditsScene(CreditsScene *creditsScene)

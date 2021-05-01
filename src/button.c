@@ -15,11 +15,9 @@ Button initButton(Texture texture, int numFrames, Sound sound, Vector2 position)
     return button;
 }
 
-bool buttonState(Button *button)
+bool updateButtonState(Button *button)
 {
-    button->mousePoint = GetMousePosition();
-
-    if (CheckCollisionPointRec(button->mousePoint, button->bounds))
+    if (CheckCollisionPointRec(GetMousePosition(), button->bounds))
     {
         if (IsMouseButtonDown(MOUSE_LEFT_BUTTON))
         {

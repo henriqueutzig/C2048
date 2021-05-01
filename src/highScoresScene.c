@@ -2,35 +2,35 @@
 #include "includes/window.h"
 #include "includes/gameScene.h"
 
-void drawHighScoresScene(HighScoresScene highScoresScene, Ranker rank[N_MAX_RANKERS], int nHS)
+void drawHighScoresScene(HighScoresScene highScoresScene, Ranker rank[N_MAX_RANKERS], int rankSize)
 {
     BeginDrawing();
 
     ClearBackground(BACKGROUND_COLOR);
 
     drawButton(highScoresScene.btMainMenu);
-    drawRankingBlock(highScoresScene.rankingBlock, highScoresScene.medal, rank, nHS);
+    drawRankingBlock(highScoresScene.rankingBlock, highScoresScene.medal, rank, rankSize);
     drawElementUI(highScoresScene.leaderboardTitle);
 
     EndDrawing();
 }
 
-void highScoresSceneAction(HighScoresScene *highScoresScene, int *screenState)
+void highScoresSceneAction(HighScoresScene *highScoresScene, ScreenState *screenState)
 {
-    if (buttonState(&highScoresScene->btMainMenu))
-        *screenState = mainMenu;
+    if (updateButtonState(&highScoresScene->btMainMenu))
+        *screenState = MENU_SCENE;
 }
 
 HighScoresScene initHighScores()
 {
-    HighScoresScene window;
+    HighScoresScene highScoresScene;
 
-    window.btMainMenu = initButton(LoadTexture(BT_BACK), 1, LoadSound(BT_SOUND), (Vector2){20, 10});
-    window.medal = initElementUI(LoadTexture(MEDAL_SMALL), (Vector2){0, 0});
-    window.leaderboardTitle = initElementUI(LoadTexture(LEADERBOARD), (Vector2){198, 68});
-    window.rankingBlock = initElementTextUI(LoadTexture(RANKING_BLOCK), (Vector2){227, 151}, WHITE, 16);
+    highScoresScene.btMainMenu = initButton(LoadTexture(BT_BACK), 1, LoadSound(BT_SOUND), (Vector2){20, 10});
+    highScoresScene.medal = initElementUI(LoadTexture(MEDAL_SMALL), (Vector2){0, 0});
+    highScoresScene.leaderboardTitle = initElementUI(LoadTexture(LEADERBOARD), (Vector2){198, 68});
+    highScoresScene.rankingBlock = initElementTextUI(LoadTexture(RANKING_BLOCK), (Vector2){227, 151}, WHITE, 16);
 
-    return window;
+    return highScoresScene;
 }
 
 void deInitHighScores(HighScoresScene *highScoresScene)
