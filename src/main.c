@@ -1,4 +1,5 @@
 #define RAYGUI_IMPLEMENTATION
+#define RAYGUI_SUPPORT_ICONS
 #define GUI_FILE_DIALOG_IMPLEMENTATION
 #include <stdio.h>
 
