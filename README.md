@@ -4,11 +4,12 @@
 
 <div align="center">
     <h4>
-        C2048 is a clone of 2048 made by <a href="https://github.com/henriqueutzig">Henrique Utzig</a> and <a href="https://github.com/PedroKlein">Pedro Klein</a> written in C using <a href="https://raylib.com/">raylib</a> with <a href="https://draculatheme.com/">dracula</a> theme.
+        C2048 is a clone of 2048 made by <a href="https://github.com/henriqueutzig">Henrique Utzig</a> and <a href="https://github.com/PedroKlein">Pedro Klein</a>. It is written in C using <a href="https://raylib.com/">raylib</a> with <a href="https://draculatheme.com/">dracula theme</a> as the color palette.
     </h4>
 </div>
 
 ## Installation
+Make sure you already have build essentials installed.
 ```bash
     $ git clone https://github.com/henriqueutzig/C2048.git
     $ cd /C2048
