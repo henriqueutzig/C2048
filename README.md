@@ -4,7 +4,8 @@
 
 <div align="center">
     <h4>
-        C2048 is a clone of 2048 made by <a href="https://github.com/henriqueutzig">Henrique Utzig</a> and <a href="https://github.com/PedroKlein">Pedro Klein</a>. It is written in C using <a href="https://raylib.com/">raylib</a> with <a href="https://draculatheme.com/">dracula theme</a> as the color palette.
+        C2048 is a clone of 2048 made by <a href="https://github.com/henriqueutzig">Henrique Utzig</a> and <a href="https://github.com/PedroKlein">Pedro Klein</a> as a final project for INF01202 at <a href="http://www.ufrgs.br/english/home"> UFRGS</a>. <br>
+        The game is written in C using <a href="https://raylib.com/">raylib</a> and <a href="https://draculatheme.com/">dracula theme</a> color palette.
     </h4>
 </div>
 
