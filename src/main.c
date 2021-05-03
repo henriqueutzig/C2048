@@ -20,7 +20,7 @@ int main(void)
     srand(time(NULL));
     Window window = (Window){WINDOW_DW, WINDOW_DH, MENU_SCENE, "C2048"};
     InitWindow(window.width, window.height, window.name);
-    //InitAudioDevice();
+    InitAudioDevice();
     SetExitKey(KEY_F4);
     GuiLoadStyle(DRACULA_STYLE);
 
@@ -73,7 +73,7 @@ int main(void)
     deInitGameScene(&gameScene);
     deInitCreditsScene(&creditsScene);
     deInitHighScores(&highScoresScene);
-    //CloseAudioDevice();
+    CloseAudioDevice();
     CloseWindow();
 
     return 0;
